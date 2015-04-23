@@ -1,0 +1,22 @@
+{
+  "name": "Grid",
+  "version": "0.0.0",
+  "description": "Grid system for virtualization projects",
+  "main": "grid-sim.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha test/"
+  },
+  "keywords": [
+    "grid",
+    "spatial",
+    "starcolon",
+    "2d",
+    "plane",
+    "cells"
+  ],
+  "author": "StarColon Projects",
+  "license": "MIT"
+}
