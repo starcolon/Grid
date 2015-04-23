@@ -63,30 +63,111 @@ Grid.create = function(numRow,numCol){
 /**
  * Duplicate a grid object (deep copy)
  * @param {grid}
+ * @returns {grid}
  */
 Grid.duplicate = function(grid){}
+
+/**
+ * Remove a row from a grid
+ * @param {grid}
+ * @returns {Closure}
+ */
 Grid.removeRow = function(grid){
 	return function(n){
-
+		// Iterate through each column, remove the n-th row
+		grid.forEach(col,i){
+			if (grid[i].hasOwnProperty(n))
+				grid[i].splice(n,1);
+		}
 	}
 }
+
+/**
+ * Remove a column from a grid
+ * @param {grid}
+ * @returns {Closure}
+ */
 Grid.removeCol = function(grid){
 	return function(n){
-
+		grid.splice(n,1);
 	}
 }
+
+
+/**
+ * Add a row to a grid. This won't insert if already exist.
+ * @param {grid}
+ * @returns {Closure}
+ */
 Grid.addRow = function(grid){
-	return function(n){
-
+	return function(n,len){
+		// Iterate through each column, add the n-th row
+		grid.forEach(col,i){
+			if (!grid[i].hasOwnProperty(n))
+				grid[i][n] = new Array(len);
+		}
 	}
 }
+
+/**
+ * Add a column to a grid. This won't insert if already exist.
+ * @param {grid}
+ * @returns {Closure}
+ */
 Grid.addCol = function(grid){
-	return function(n){
-
+	return function(n,len){
+		if (!grid.hasOwnProperty(n))
+			grid[n] = new Array(len);
 	}
 }
+
+/**
+ * List sibling coordinates of a specified coordinate
+ * @param {grid}
+ * @returns {Array} array of a coordinates
+ */
+Grid.siblings = function(grid){
+	return function (i,j){
+		var siblings = [
+			[i-1, j],
+			[i+1, j],
+			[i, j-1],
+			[i, j+1]
+		];
+		return siblings;
+	}
+}
+
+/*
+ * Iterate through each sibling and commit an action on it
+ * NOTE: The value in each sibling is not mutable by the function.
+ * @param {grid}
+ */
+Grid.eachSibling = function(grid){
+	return function(i,j){
+		return function(F){
+			var siblings = Grid.siblings(grid)(i,j);
+			siblings.forEach(function(coord){
+				F(Grid.cell(coord[0],coord[1]).of(grid));
+			});
+		}
+	}
+}
+
 Grid.rows = function(j){}
 Grid.cols = function(i){}
+
+
+
+
+
+
+
+
+
+
+
+
 
 /** 
  * Cell metaclass
@@ -110,8 +191,7 @@ Grid.cell = function(i,j){
 	 */
 	this.of = function(grid){
 		if (this.isNotIn(grid))
-			throw 'The grid does not contain ('+i+','+j+')';
-
+			return undefined;
 		return grid[i][j];
 	}
 
