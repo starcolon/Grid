@@ -191,9 +191,88 @@ Grid.eachSibling = function(grid){
 	}
 }
 
-Grid.rows = function(j){}
-Grid.cols = function(i){}
 
+/**
+ * Traverse through the grid 
+ * @param {grid}
+ */
+Grid.traverse = function(grid){
+
+
+	/** 
+	 * Grid.traverse(grid).from(i,j)
+	 * Define where to start traversal
+	 */
+	this.from = function(i,j){
+
+		var startAt = [i,j];
+		var route = [{i:i, j:j}];
+		
+		/**
+		 * Grid.traverse(grid).from(i,j).to(m,n)
+		 * Walk straight to the coordinate
+		 */
+		this.to = function(m,n){
+			var stopAt = [m,n];
+			
+			// Construct a route from the beginning point to the target point
+			nextStep(startAt, stopAt, 1);
+
+			/**
+			 * Get the route array
+			 * @returns {Array} Array of coordinates in the route
+			 */
+			this.route = function(){
+				return route;
+			}
+
+			return this;
+		}
+
+
+		function deepPosEqual(pos1,pos2){
+			return pos1[0]===pos2[0] && pos1[1]===pos2[1]
+		}
+
+
+		/**
+		 * Step to the next pos until it reaches the end
+		 * Also construct the route as it goes
+		 * @param {Array} pos - starting point 
+		 * @param {Array} end - ending point
+		 * @param {Integer} i - coordinate index (1=row, 0=col)
+		 * @returns {Array} the last position
+		 */
+		function nextStep(pos,end,i){
+			if (deepPosEqual(pos,end)){
+				// addRoute(pos);
+				return pos;
+			}
+			else if (pos[i]!==end[i]){
+				pos[i] = pos[i]<end[i] ? pos[i]+1 : pos[i]-1;
+				addRoute(pos);
+				pos = nextStep(pos,end,i);
+			}
+			else if (i>0)
+				pos = nextStep(pos,end,i-1);
+			else{
+				return pos;
+			}
+		}
+
+		function addRoute(pos){
+			route.push({i:pos[0], j:pos[1]});
+		}
+
+
+
+		return this;
+	}
+
+
+
+	return this;
+}
 
 
 

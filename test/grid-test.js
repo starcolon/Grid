@@ -115,4 +115,42 @@ describe('Grid basic test', function(){
 
 	})
 
+	describe('Traversal test', function(){
+		var g = Grid.create(30,30,'a');
+
+		it('should construct path through the row', function(){
+			var route = Grid.traverse(g).from(5,5).to(5,0).route();
+
+			route.should.have.length(6);
+			route.should.contain.one.deep.equal({i:5, j:5});
+			route.should.contain.one.deep.equal({i:5, j:4});
+			route.should.contain.one.deep.equal({i:5, j:3});
+			route.should.contain.one.deep.equal({i:5, j:2});
+			route.should.contain.one.deep.equal({i:5, j:1});
+			route.should.contain.one.deep.equal({i:5, j:0});
+		})
+
+		it('should construct path through the column', function(){
+			var route = Grid.traverse(g).from(0,5).to(5,5).route();
+
+			route.should.have.length(6);
+			route.should.contain.one.deep.equal({i:5, j:5});
+			route.should.contain.one.deep.equal({i:4, j:5});
+			route.should.contain.one.deep.equal({i:3, j:5});
+			route.should.contain.one.deep.equal({i:2, j:5});
+			route.should.contain.one.deep.equal({i:1, j:5});
+			route.should.contain.one.deep.equal({i:0, j:5});
+		})
+
+		it('should construct a zigzag route', function(){
+			var route = Grid.traverse(g).from(1,1).to(3,2).route();
+
+			route.should.have.length(4);
+			route.should.contain.one.deep.equal({i:1, j:1});
+			route.should.contain.one.deep.equal({i:1, j:2});
+			route.should.contain.one.deep.equal({i:2, j:2});
+			route.should.contain.one.deep.equal({i:3, j:2});
+		})
+	})
+
 });
