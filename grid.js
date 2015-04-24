@@ -334,7 +334,12 @@ Grid.traverse = function(grid){
 		}
 
 		function move(from,direction){
-
+			var target = {i: from.i, j: from.j};
+			if (direction=='UP') target.j--;
+			else if (direction=='DOWN') target.j++;
+			else if (direction=='LEFT') target.i--;
+			else if (direction=='RIGHT') target.i++;
+			return target;
 		}
 
 

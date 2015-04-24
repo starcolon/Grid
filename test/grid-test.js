@@ -158,11 +158,24 @@ describe('Grid basic test', function(){
 			expect(route_len).to.equal(Grid.distance({i:1,j:1},{i:3,j:2}));
 		})
 
-		it('should reconstruct the direction of the route', function(){
+		it('should calculate the direction of the route', function(){
 			var directions = Grid.traverse(g).from(1,1).to(3,2).directions();
 
 			directions.should.have.length(3);
 			directions.should.deep.equal(['DOWN','RIGHT','RIGHT'])
+		})
+
+		it('should reconstruct the route from directions', function(){
+			var route = Grid.traverse(g).from(1,1).go(['DOWN','RIGHT','RIGHT']);
+
+			route.should.have.length(4);
+			expect(route[3]).to.deep.equal({i:3, j:2});
+		})
+
+		it('should throw an error when moving exceed the grid boundary', function(){
+			var directions = ['UP','LEFT','LEFT','LEFT','DOWN'];
+			var traversal = Grid.traverse(g).from(1,1);
+			expect(traversal.go.bind(traversal, directions)).to.throw('Move exceeds the boundary of the grid');
 		})
 	})
 
