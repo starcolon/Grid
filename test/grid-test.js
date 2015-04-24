@@ -151,6 +151,12 @@ describe('Grid basic test', function(){
 			route.should.contain.one.deep.equal({i:2, j:2});
 			route.should.contain.one.deep.equal({i:3, j:2});
 		})
+
+		it('should measure the distance of the route correctly', function(){
+			var route_len = Grid.traverse(g).from(1,1).to(3,2).distance();
+
+			expect(route_len).to.equal(Grid.distance({i:1,j:1},{i:3,j:2}));
+		})
 	})
 
 });

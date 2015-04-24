@@ -193,6 +193,14 @@ Grid.eachSibling = function(grid){
 
 
 /**
+ * Calculate the block distance of a route between two coordinates
+ */
+Grid.distance = function(coord1, coord2){
+	return Math.abs(coord1.i-coord2.i) + Math.abs(coord1.j-coord2.j)
+}
+
+
+/**
  * Traverse through the grid 
  * @param {grid}
  */
@@ -224,6 +232,30 @@ Grid.traverse = function(grid){
 			 */
 			this.route = function(){
 				return route;
+			}
+
+
+			/**
+			 * Measure how far from begin to end 
+			 * @returns {Integer} block distance of the route
+			 */
+			this.distance = this.len = function(){
+				return route.length;
+			}
+
+
+			/**
+			 * Translate route into directions
+			 * @returns {Array}
+			 */
+			this.directions = function(){
+				var directions = [];
+				_.reduce(route, function(previous,next){
+					directions.push(direction(previous,next));
+					previous = next;
+					return previous;
+				})
+				return directions;
 			}
 
 			return this;
@@ -264,6 +296,19 @@ Grid.traverse = function(grid){
 			route.push({i:pos[0], j:pos[1]});
 		}
 
+
+		function direction(from, to){
+			if (from.i<to.i)
+				return 'RIGHT';
+			else if (from.i>to.i)
+				return 'LEFT';
+			else if (from.j<to.j)
+				return 'DOWN';
+			else if (from.j>to.j)
+				return 'UP';
+			else
+				return null;
+		}
 
 
 		return this;
