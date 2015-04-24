@@ -18,5 +18,17 @@
     "cells"
   ],
   "author": "StarColon Projects",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies":{
+    "mocha": "*",
+    "chai": "*",
+    "chai-things":"*"
+  },
+  "dependencies": {
+    "body-parser": ">= 1.10.0",
+    "colors": "*",
+    "express": "*",
+    "prettyjson": "^1.1.0",
+    "underscore": "^1.8.2"
+  }
 }
