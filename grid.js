@@ -44,16 +44,18 @@ var Grid = function(){}
  * Create a grid object 
  * @param {Integer} numRow
  * @param {Integer} numCol
+ * @param {Any} defaultValue
  * @returns {grid}
  */
-Grid.create = function(numRow,numCol){
+Grid.create = function(numRow,numCol,defaultValue){
 	if (numRow * numCol <= 0) 
 		throw "Number of columns and rows must be positive integer." 
 
 	var grid = [];
 
 	_(numCol).times(function populateRow(){
-		var row = new Array(numRow);
+		var row = [];
+		_(numRow).times(function(){row.push(defaultValue)});
 		grid.push(row);	
 	});
 
@@ -208,6 +210,14 @@ Grid.cell = function(i,j){
 		}
 	}
 
+	/**
+	 * Grid.cell(i,j).coord() - Returns a coordinate JSON object
+	 * @returns {JSON}
+	 */
+	this.coord = function(){
+		return {i: self.i, j: self.j}
+	}
+
 
 	/** 
 	 * Grid.cell(i,j).isIn(grid) - Check if a cell is in the grid
@@ -215,10 +225,8 @@ Grid.cell = function(i,j){
 	 * @returns {True/False}
 	 */
 	this.isIn = function(grid){
-		var self = this;
-		if (!grid.hasOwnProperty(self.i)) return false;
-		if (!grid[i].hasOwnProperty(self.j)) return false;
-		return (typeof(self[i][j])!='defined');
+		if (typeof(grid[self.i])=='undefined') return false;
+		return (typeof(grid[self.i][self.j])!='undefined');
 	}
 
 	/**
