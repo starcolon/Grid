@@ -54,7 +54,7 @@ Grid.create = function(numRow,numCol){
 
 	_(numCol).times(function populateRow(){
 		var row = new Array(numRow);
-		grid.push(row);
+		grid.push(row);	
 	});
 
 	return grid;
@@ -75,10 +75,10 @@ Grid.duplicate = function(grid){}
 Grid.removeRow = function(grid){
 	return function(n){
 		// Iterate through each column, remove the n-th row
-		grid.forEach(col,i){
+		grid.forEach(function(col,i){
 			if (grid[i].hasOwnProperty(n))
 				grid[i].splice(n,1);
-		}
+		});
 	}
 }
 
@@ -102,10 +102,10 @@ Grid.removeCol = function(grid){
 Grid.addRow = function(grid){
 	return function(n,len){
 		// Iterate through each column, add the n-th row
-		grid.forEach(col,i){
+		grid.forEach(function(col,i){
 			if (!grid[i].hasOwnProperty(n))
 				grid[i][n] = new Array(len);
-		}
+		});
 	}
 }
 
@@ -247,6 +247,14 @@ Grid.cell = function(i,j){
 			grid[this.i][this.j] = [];
 
 		return true;
+	}
+
+	/**
+	 * Grid.cell(i,j).siblings(grid) - Equivalent to Grid.siblings(grid)(i,j)
+	 * @param {grid}
+	 */
+	this.siblings = function(grid){
+		return Grid.siblings(grid)(i,j);
 	}
 
 	return this; 
