@@ -51,6 +51,7 @@ Grid.create = function(numRow,numCol,defaultValue){
 	if (numRow * numCol <= 0) 
 		throw "Number of columns and rows must be positive integer." 
 
+	defaultValue = defaultValue || 0;
 	var grid = [];
 
 	_(numCol).times(function populateRow(){
@@ -130,19 +131,51 @@ Grid.addCol = function(grid){
  */
 Grid.siblings = function(grid){
 	return function (i,j){
-		var siblings = [
+		var sib = [
 			[i-1, j],
 			[i+1, j],
 			[i, j-1],
 			[i, j+1]
 		];
-		return siblings;
+
+		var qualifiedSiblings = [];
+		sib.forEach(function(s){
+			var a = s[0], b = s[1];
+			if (Grid.has(grid)(a,b))
+				qualifiedSiblings.push([a,b]);
+		});
+
+		return qualifiedSiblings;
 	}
 }
 
-/*
+
+/**
+ * Determine if a coordinate (i,j) is in the grid
+ * @param {Grid}
+ */
+Grid.has = Grid.contains = function(grid){
+	return function(i,j){
+		return (i in grid && j in grid[i]);
+	}
+}
+
+/**
+ * Iterate through each cell in the grid and commit an action
+ */
+Grid.eachCell = function(grid){
+	return function(F){
+		grid.forEach(function (col,i){
+			col.forEach(function(cell,j){
+				F(cell,i,j);
+			})
+		})
+	}
+}
+
+/**
  * Iterate through each sibling and commit an action on it
- * NOTE: The value in each sibling is not mutable by the function.
+ * Usage: Grid.eachSibling(grid)(5,3)(doSomething)
  * @param {grid}
  */
 Grid.eachSibling = function(grid){
@@ -150,7 +183,9 @@ Grid.eachSibling = function(grid){
 		return function(F){
 			var siblings = Grid.siblings(grid)(i,j);
 			siblings.forEach(function(coord){
-				F(Grid.cell(coord[0],coord[1]).of(grid));
+				var i = coord[0], j = coord[j];
+				var value = Grid.cell(i,j).of(grid);
+				F(value, i, j);
 			});
 		}
 	}
@@ -225,8 +260,7 @@ Grid.cell = function(i,j){
 	 * @returns {True/False}
 	 */
 	this.isIn = function(grid){
-		if (typeof(grid[self.i])=='undefined') return false;
-		return (typeof(grid[self.i][self.j])!='undefined');
+		return Grid.has(grid)(i,j)
 	}
 
 	/**

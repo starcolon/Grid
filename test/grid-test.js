@@ -3,6 +3,7 @@ var chai = require('chai');
 var expect = chai.expect;
 chai.should();
 chai.use(require('chai-things'));
+chai.config.includeStack = true;
 
 // Dependency
 var Grid = require('../grid.js').Grid;
@@ -58,6 +59,11 @@ describe('Grid basic test', function(){
 			siblings.should.contain.an.item.deep.equal([1,3]);
 		})
 
+		it('should list sibling coordinates excluding out-of-bound ones', function(){
+			var siblings = Grid.siblings(g)(0,1);
+			siblings.should.have.length.below(4);
+		})
+
 		it.skip('should iterate through each sibling correctly', function(){
 
 		})
@@ -92,6 +98,21 @@ describe('Grid basic test', function(){
 			expect(Grid.cell(9,9).of(g)).to.equal('9:9');
 			expect(Grid.cell(0,0).of(g)).to.equal('0:0');
 		});
+
+		it('should generate values for each cell via each function', function(){
+			var setValue = function(e, i, j){
+				g[i][j] = i*10+j;
+			}
+			Grid.eachCell(g)(setValue);
+
+			expect(g[0][0]).to.equal(0);
+			expect(g[1][0]).to.equal(10);
+			expect(g[3][5]).to.equal(35);
+			expect(g[0][8]).to.equal(8);
+			expect(g[8][3]).to.equal(83);
+		})
+
+
 	})
 
 });
