@@ -9,7 +9,7 @@ var Grid = require('../grid.js').Grid;
 
 describe('Grid basic test', function(){
 
-	describe('Fundamental test', function(){
+	describe('Fundamental Grid namespace test', function(){
 
 		var g = Grid.create(5,5);
 
@@ -58,6 +58,23 @@ describe('Grid basic test', function(){
 			siblings.should.contain.an.item.deep.equal([1,3]);
 		})
 
+		it.skip('should iterate through each sibling correctly', function(){
+
+		})
+
+
 	});
+
+	describe('Fundamental Grid.cell namespace test', function(){
+		var g = Grid.create(10,10);
+
+		it('should know if a coordinate belongs to the grid', function(){
+			expect(Grid.cell(10,10).isIn(g)).not.to.be.true);
+		});
+
+		it('should populate cell values', function(){
+
+		});
+	})
 
 });
