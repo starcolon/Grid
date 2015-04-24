@@ -262,6 +262,29 @@ Grid.traverse = function(grid){
 		}
 
 
+		/**
+		 * Move the coordinate towards the directions
+		 * If the position go beyond the boundary of the grid,
+		 * it throws an exception.
+		 * @param {Array} directions e.g. ['UP','UP','LEFT']
+		 * @returns {Array} Route
+		 */
+		this.go = function(directions){
+			var pos = {i: i, j: j};
+			route = [{i: i, i: j}];
+			while (directions.length>0){
+				var next = directions.splice(0,1);
+				pos = move(pos, next);
+
+				if (!Grid.has(grid)(pos.i,pos.j))
+					throw 'Move exceeds the boundary of the grid';
+
+				route.push({i: pos.i, j: pos.j});
+			}
+			return route;
+		}
+
+
 		function deepPosEqual(pos1,pos2){
 			return pos1[0]===pos2[0] && pos1[1]===pos2[1]
 		}
@@ -308,6 +331,10 @@ Grid.traverse = function(grid){
 				return 'UP';
 			else
 				return null;
+		}
+
+		function move(from,direction){
+
 		}
 
 
