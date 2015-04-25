@@ -333,6 +333,12 @@ Grid.traverse = function(grid){
 				return null;
 		}
 
+		/**
+		 * Move a point to a sibling block according to the direction
+		 * @param {Coordinate} from
+		 * @param {String} direction 
+		 * returns {Coordinate} the point after movement
+		 */
 		function move(from,direction){
 			var target = {i: from.i, j: from.j};
 			if (direction=='UP') target.j--;
