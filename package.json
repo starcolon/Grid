@@ -1,7 +1,7 @@
 {
   "name": "Grid",
   "version": "0.0.2",
-  "description": "Grid system for virtualization projects",
+  "description": "Grid data structure library for spatial application.",
   "main": "grid-sim.js",
   "directories": {
     "test": "test"
