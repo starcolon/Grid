@@ -68,7 +68,18 @@ Grid.create = function(numRow,numCol,defaultValue){
  * @param {grid}
  * @returns {grid}
  */
-Grid.duplicate = function(grid){}
+Grid.duplicate = function(grid){
+	var g = [];
+	Grid.eachCellOf(grid).do(function (value, coord){
+		if (!(coord.i in g))
+			g[coord.i] = [];
+
+		g[coord.i][coord.j] = value;
+		return value;
+	});
+
+	return g;
+}
 
 /**
  * Remove a row from a grid

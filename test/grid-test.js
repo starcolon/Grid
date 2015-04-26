@@ -19,8 +19,10 @@ describe('Grid basic test', function(){
 			g[0].should.have.length(5);
 		});
 
-		it.skip('should duplicate a grid', function(){
+		it('should duplicate a grid', function(){
+			g_new = Grid.duplicate(g);
 
+			g_new.should.deep.equal(g);
 		});
 
 		it('should add a column, becomes a 5x6 grid', function(){
@@ -62,10 +64,6 @@ describe('Grid basic test', function(){
 		it('should list sibling coordinates excluding out-of-bound ones', function(){
 			var siblings = Grid.siblings(g)(0,1);
 			siblings.should.have.length.below(4);
-		})
-
-		it.skip('should iterate through each sibling correctly', function(){
-
 		})
 
 
