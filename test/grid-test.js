@@ -211,7 +211,7 @@ describe('Grid basic test', function(){
 			g.should.deep.equal(I);
 		})
 
-		it('should make identity with where / setValue clause', function(){
+		it('should make identity with where / setValue clauses', function(){
 			Grid.eachCellOf(g).setTo(0);
 
 			for (var i in g)
@@ -228,7 +228,7 @@ describe('Grid basic test', function(){
 			g.should.deep.equal(I);
 		})
 
-		it('should scale identity matrix correctly', function(){
+		it('should scale identity matrix with do function', function(){
 			var count = Grid.eachCellOf(g).do(function(value,coord){ 
 				return value*9
 			});
