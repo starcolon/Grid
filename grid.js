@@ -473,34 +473,40 @@ Grid.eachCellOf = Grid.eachOf = function(grid){
 
 	if (typeof(grid)=='undefined')
 		throw 'Grid has not been defined';
-
-	// Default filter does not filter out any cells
-	var filter = function(whatever){return true};
-
 	var self = this;
 
+	// Default filter does not filter out any cells (always returns true)
+	self.cellFilter = function(whatever){return true};
+
+
 	/**
+	 * Grid.eachOf(grid).where(a,coord => a.i>0)
 	 * Filter the cells by condition
 	 * @param {Function} condition - A function which takes (cellvalue, coord) and returns true if the cell matches the criteria
 	 */
 	this.where = function(condition){
 		if (typeof(condition)!='function')
 			throw 'Requires a function clause';
-		filter = condition;
+		self.cellFilter = condition;
 		return self;
 	}
 
 	/**
+	 * Grid.eachOf(grid).do(a,coord => a*3)
 	 * Trigger a function on each cell which matches the filter condition
 	 * everything returned by F(value) will takes place the certain cell rightaway
 	 * @param {Function} F - Function that takes (cellvalue, coord) as arguments and returns a new value of the cell
-	 * @returns {None}
+	 * @returns {Integer} Number of cells affected by the function
 	 */
 	this.do = this.map = function(F){
-		for i in grid
-			for j in grid[j]
-				if (filter({i:i,j:j}, grid[i][j]))
-					grid[i][j] = F({i:i,j:j}, grid[i][j]);
+		var count=0;
+		for (var i in grid)
+			for (var j in grid[j])
+				if (self.cellFilter(grid[i][j],{i:i,j:j})){
+					grid[i][j] = F(grid[i][j],{i:i,j:j});
+					++count;
+				}
+		return count;
 	}
 
 

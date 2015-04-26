@@ -179,4 +179,37 @@ describe('Grid basic test', function(){
 		})
 	})
 
+	describe('Foreach tests', function(){
+		var g = Grid.create(3,3,'0');
+
+		it('should throw an exception if grid has not been passed in', function(){
+			expect(Grid.eachCellOf.bind(this)).to.throw('Grid has not been defined');
+		})
+
+		it('should replace each cell with one', function(){
+			var count = Grid.eachCellOf(g).do(function(value,coord){
+				return 1;
+			});
+
+			// All cells should be affected
+			expect(count).to.equal(9);
+
+			for (var i in g)
+				for (var j in g[i])
+					expect(g[i][j]).to.equal(1);
+		})
+
+		it('should make identity matrix', function(){
+			var count = Grid.eachCellOf(g).do(function(value,coord){
+				if (coord.i==coord.j)
+					return 1;
+				else
+					return 0;
+			});
+
+			var I = [[1,0,0],[0,1,0],[0,0,1]];
+			g.should.deep.equal(I);
+		})
+	})
+
 });
