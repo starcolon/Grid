@@ -464,6 +464,23 @@ Grid.cell = function(i,j){
 	return this; 
 }
 
+
+/**
+ * Iterate through each cell of a grid and do something with it
+ * @param {grid}
+ */
+Grid.eachCellOf = Grid.eachOf = function(grid){
+
+	if (typeof(grid)=='undefined')
+		throw 'Grid has not been defined';
+
+
+
+
+
+	return this;
+}
+
 // Export the module for node.js app
 if (typeof(exports)!='undefined') 
 	exports.Grid = Grid;
