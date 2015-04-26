@@ -481,13 +481,26 @@ Grid.eachCellOf = Grid.eachOf = function(grid){
 
 	/**
 	 * Filter the cells by condition
-	 * @param {Function} condition - takes a cell coordinate and returns true for the selected cells
+	 * @param {Function} condition - A function which takes (cellvalue, coord) and returns true if the cell matches the criteria
 	 */
 	this.where = function(condition){
 		if (typeof(condition)!='function')
 			throw 'Requires a function clause';
 		filter = condition;
 		return self;
+	}
+
+	/**
+	 * Trigger a function on each cell which matches the filter condition
+	 * everything returned by F(value) will takes place the certain cell rightaway
+	 * @param {Function} F - Function that takes (cellvalue, coord) as arguments and returns a new value of the cell
+	 * @returns {None}
+	 */
+	this.do = this.map = function(F){
+		for i in grid
+			for j in grid[j]
+				if (filter({i:i,j:j}, grid[i][j]))
+					grid[i][j] = F({i:i,j:j}, grid[i][j]);
 	}
 
 
