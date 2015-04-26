@@ -474,8 +474,21 @@ Grid.eachCellOf = Grid.eachOf = function(grid){
 	if (typeof(grid)=='undefined')
 		throw 'Grid has not been defined';
 
+	// Default filter does not filter out any cells
+	var filter = function(whatever){return true};
 
+	var self = this;
 
+	/**
+	 * Filter the cells by condition
+	 * @param {Function} condition - takes a cell coordinate and returns true for the selected cells
+	 */
+	this.where = function(condition){
+		if (typeof(condition)!='function')
+			throw 'Requires a function clause';
+		filter = condition;
+		return self;
+	}
 
 
 	return this;
