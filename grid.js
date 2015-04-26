@@ -491,6 +491,24 @@ Grid.eachCellOf = Grid.eachOf = function(grid){
 		return self;
 	}
 
+
+	/**
+	 * Grid.eachOf(grid).setTo(value)
+	 * Set each grid which satisfy the filter condition with the specified value
+	 * @param {Object} value
+	 * @returns {Integer} Number of cells affected by the function
+	 */
+	this.setTo = this.setValue = function(value){
+		var count=0;
+		for (var i in grid)
+			for (var j in grid[i])
+				if (self.cellFilter(grid[i][j],{i:i,j:j})){
+					grid[i][j] = value;
+					++count;
+				}
+		return count;
+	}
+
 	/**
 	 * Grid.eachOf(grid).do(a,coord => a*3)
 	 * Trigger a function on each cell which matches the filter condition

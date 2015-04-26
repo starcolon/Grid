@@ -199,7 +199,7 @@ describe('Grid basic test', function(){
 					expect(g[i][j]).to.equal(1);
 		})
 
-		it('should make identity matrix', function(){
+		it('should make identity matrix with do clause', function(){
 			var count = Grid.eachCellOf(g).do(function(value,coord){
 				if (coord.i==coord.j)
 					return 1;
@@ -209,6 +209,34 @@ describe('Grid basic test', function(){
 
 			var I = [[1,0,0],[0,1,0],[0,0,1]];
 			g.should.deep.equal(I);
+		})
+
+		it('should make identity with where / setValue clause', function(){
+			Grid.eachCellOf(g).setTo(0);
+
+			for (var i in g)
+				for (var j in g[i])
+					expect(g[i][j]).to.equal(0);
+
+			var count = Grid.eachCellOf(g)
+				.where(function(value,coord){ return coord.i==coord.j})
+				.setValue(1);
+
+			expect(count).to.equal(3);
+
+			var I = [[1,0,0],[0,1,0],[0,0,1]];
+			g.should.deep.equal(I);
+		})
+
+		it('should scale identity matrix correctly', function(){
+			var count = Grid.eachCellOf(g).do(function(value,coord){ 
+				return value*9
+			});
+
+			expect(count).to.equal(9);
+
+			var I9 = [[9,0,0],[0,9,0],[0,0,9]];
+			g.should.deep.equal(I9);
 		})
 	})
 
