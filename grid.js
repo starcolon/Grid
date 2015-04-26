@@ -501,7 +501,7 @@ Grid.eachCellOf = Grid.eachOf = function(grid){
 	this.do = this.map = function(F){
 		var count=0;
 		for (var i in grid)
-			for (var j in grid[j])
+			for (var j in grid[i])
 				if (self.cellFilter(grid[i][j],{i:i,j:j})){
 					grid[i][j] = F(grid[i][j],{i:i,j:j});
 					++count;
