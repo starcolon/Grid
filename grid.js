@@ -277,7 +277,6 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 		 */
 		this.to = function (i,j){
 			endAt = [i,j];
-			route = [];
 
 			var self = this;
 
@@ -339,8 +338,33 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 				// until it finds the starting point.
 				// (Breadth-first search)
 
-				// TAOTODO:
+				function moveTowardsStart(pos,route){
+					route.push(pos);
 
+					if (pos[0]==startAt[0] && pos[1]==startAt[1])
+						return route;
+
+					var magnitude = Grid.cell(pos[0],pos[1]).of(waveGrid);
+
+					// List the neighbors
+					var neighbors = Grid.siblings(waveGrid)(pos[0],pos[1]);
+
+					if (neighbors.length==0)
+						return route;
+
+				 	// Go downwards the magnitude
+				 	for (var n in neighbors){
+				 		if (Grid.cell(neighbors[n][0], neighbors[n][1]).of(waveGrid) < magnitude){
+				 			return moveTowardsStart(neighbors[n],route);
+				 			break;
+				 		}
+				 	}
+
+				}
+
+				var route = moveTowardsStart(endAt,[]);
+
+				console.log(waveGrid);
 
 				return route;
 			}

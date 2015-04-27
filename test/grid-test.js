@@ -256,9 +256,10 @@ describe('Grid basic test', function(){
 
 			it('should find a simple path from 4,0 to 0,4', function(){
 				route = simpleRouting.lee();
-
 				route.should.have.length.above(1);
+				console.log(route);
 			})
+
 		})
 	})
 
