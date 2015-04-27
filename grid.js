@@ -314,6 +314,7 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 					var siblings = Grid.siblings(waveGrid)(cell[0],cell[1]);
 					if (siblings.length==0)
 						return;
+					var parents = [];
 					siblings.forEach(function(sib,n){
 						var m=sib[0], n=sib[1];
 						if (Grid.cell(m,n).of(waveGrid)==0){
@@ -321,10 +322,16 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 							// if it has not been set
 							Grid.cell(m,n).set(waveGrid)(magnitude);
 
-							// Now expand its neighbors (recursively)
-							expandNeighbor(sib,magnitude+1);
+							// Add itself to the next parent list
+							parents.push([m,n]);
 						}
 					});
+
+					// Expand each of children
+					magnitude ++;
+					parents.forEach(function(tuple){
+						expandNeighbor(tuple,magnitude);
+					})
 				}
 
 				// Expand the wave from the beginning point
@@ -353,12 +360,29 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 						return route;
 
 				 	// Go downwards the magnitude
+				 	var routeOptions = [];
 				 	for (var n in neighbors){
-				 		if (Grid.cell(neighbors[n][0], neighbors[n][1]).of(waveGrid) < magnitude){
-				 			return moveTowardsStart(neighbors[n],route);
-				 			break;
+				 		var n_magnitude = Grid.cell(neighbors[n][0], neighbors[n][1]).of(waveGrid);
+				 		// Only consider the descent path
+				 		if (n_magnitude < magnitude){
+				 			if (routeOptions.length>0 && n_magnitude>=routeOptions[0].magnitude)
+				 				continue;
+				 			// Add the neighbor to the route options array,
+				 			// smaller magnitude comes first
+				 			var insert_index = 0;
+				 			for (var k=0; k<routeOptions; k++,insert_index++){
+				 				if (routeOptions[k].magnitude>n_magnitude)
+				 					break;
+				 			}
+					 		routeOptions.splice(
+					 			insert_index,
+					 			0,
+					 			{n: neighbors[n], magnitude: n_magnitude}
+				 			);
 				 		}
 				 	}
+
+				 	return moveTowardsStart(routeOptions[0].n,route);
 
 				}
 
