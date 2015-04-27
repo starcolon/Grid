@@ -25,6 +25,12 @@ describe('Grid basic test', function(){
 			g_new.should.deep.equal(g);
 		});
 
+		it('should duplicate a grid structure and overwrite values with A', function(){
+			g_new = Grid.duplicateStructure(g,'A');
+
+			g_new.should.all.deep.equal(['A','A','A','A','A']);
+		})
+
 		it('should add a column, becomes a 5x6 grid', function(){
 			Grid.addCol(g)(5);
 			g.should.have.length(6);
@@ -242,26 +248,16 @@ describe('Grid basic test', function(){
 	describe('Routing algorithm tests', function(){
 		var g = Grid.create(5,5,1);
 
-		var simpleRouting = Grid.routeOf(g).from(5,0).to(0,5);
+		var simpleRouting = Grid.routeOf(g).from(4,0).to(0,4);
 
 		describe('Lee routing test', function(){
 
 			wavematrix = [];
 
-			// Insert a probe to lee's algorithm function
-			simpleRouting.probed_lee = function(){
-				// Call the original lee's algorithm
-				var result = this.lee.apply(arguments);
+			it('should find a simple path from 4,0 to 0,4', function(){
+				route = simpleRouting.lee();
 
-				// Probe the wave grid
-				wavematrix = this.waveGrid;
-
-				// Eject the result
-				return result;
-			}
-
-			it('should find a simple path from 5,0 to 0,5', function(){
-				route = simpleRouting.probed_lee();
+				route.should.have.length.above(1);
 			})
 		})
 	})

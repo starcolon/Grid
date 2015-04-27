@@ -279,6 +279,8 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 			endAt = [i,j];
 			route = [];
 
+			var self = this;
+
 			/**
 			 * Define a walkable constraint
 			 * @param {Function} F - A function that takes the value and coordinate and returns TRUE if the cell is walkable
@@ -286,6 +288,8 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 			 */
 			this.where = function(F){
 				walkable = F;
+
+				return self;
 			}
 
 			/**
@@ -303,32 +307,35 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 				function notWalkable (value,coord){
 					return !walkable(value,coord)
 				}
-				waveGrid = Grid.eachCellOf(grid).where(notWalkable).setTo(0xFF);
+
+				Grid.eachCellOf(waveGrid).where(notWalkable).setTo(0xFF);
 
 				
 				// Step#2 - Wave expansion
+				var markedCoords = [];
 				function expandNeighbor(cell,magnitude){
-					var siblings = Grid.siblings(waveGrid)(cell[0],cell[1]);
-					if (siblings.length==0)
-						return;
-					siblings.forEach(function(sib,n){
-						var i=sib[0], j=sib[1];
-						if (Grid.cell(i,j).of(waveGrid)==0){
+					process.nextTick(function(){
+						var siblings = Grid.siblings(waveGrid)(cell[0],cell[1]);
+						console.log('siblings: ' + siblings);
+						if (siblings.length==0)
+							return;
+						siblings.forEach(function(sib,n){
+							var i=sib[0], j=sib[1];
+							if (Grid.cell(i,j).of(waveGrid)==0){
+								// Set the value with the current magnitude
+								// if it has not been set
+								Grid.cell(i,j).of(waveGrid).set(magnitude);
 
-							// Set the value with the current magnitude
-							// if it has not been set
-							Grid.cell(i,j).of(waveGrid).set(magnitude);
-
-							// Now expand its neighbors (recursively)
-							//expandNeighbor(g,sib,magnitude+1);
-						}
+								// Now expand its neighbors (recursively)
+								expandNeighbor(g,sib,magnitude+1);
+							}
+						});
 					});
 				}
 
 				// Expand the wave from the beginning point
 				// where its value is initially set to zero
-				process.nextTick((expandNeighbor(startAt,0)));
-
+				expandNeighbor(startAt,0);
 
 				// Step#3 - Backtrace
 				// Start at the ending point, step downwards along
