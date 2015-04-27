@@ -296,59 +296,49 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 			 */
 			this.lee = function(){
 
-				waveGrid = [];
-
 				// Step#1 - Initialize the wave grid with all zeros
-				(function init(g){
-					waveGrid = Grid.duplicateStructure(g,0);
+				var waveGrid = Grid.duplicateStructure(grid,0);
 
-					// Set the 'unwalkable' cells to special value (0xFF)
-					function notWalkable (value,coord){
-						return !walkable(value,coord)
-					}
-					waveGrid = Grid.eachCellOf(g).where(notWalkable).setTo(0xFF);
-				})(grid);
+				// Set the 'unwalkable' cells to special value (0xFF)
+				function notWalkable (value,coord){
+					return !walkable(value,coord)
+				}
+				waveGrid = Grid.eachCellOf(grid).where(notWalkable).setTo(0xFF);
 
+				
 				// Step#2 - Wave expansion
-				(function waveExpand(g){
-					function expandNeighbor(g,cell,magnitude){
-						var siblingsOf = Grid.siblings(g);
-						/*var siblings = siblingsOf(cell[0],cell[1]);
+				function expandNeighbor(cell,magnitude){
+					var siblings = Grid.siblings(waveGrid)(cell[0],cell[1]);
+					if (siblings.length==0)
+						return;
+					siblings.forEach(function(sib,n){
+						var i=sib[0], j=sib[1];
+						if (Grid.cell(i,j).of(waveGrid)==0){
 
-						if (siblings.length==0)
-							return;
-						siblings.forEach(function(sib,n){
-							var i=sib[0], j=sib[1];
-							if (Grid.cell(i,j).of(g)==0){
+							// Set the value with the current magnitude
+							// if it has not been set
+							Grid.cell(i,j).of(waveGrid).set(magnitude);
 
-								// Set the value with the current magnitude
-								// if it has not been set
-								Grid.cell(i,j).of(g).set(magnitude);
+							// Now expand its neighbors (recursively)
+							//expandNeighbor(g,sib,magnitude+1);
+						}
+					});
+				}
 
-								// Now expand its neighbors (recursively)
-								//expandNeighbor(g,sib,magnitude+1);
-							}
-						});*/
-					}
+				// Expand the wave from the beginning point
+				// where its value is initially set to zero
+				process.nextTick((expandNeighbor(startAt,0)));
 
-					// Expand the wave from the beginning point
-					// where its value is initially set to zero
-					process.nextTick((expandNeighbor(g,startAt,0)));
-
-				})(waveGrid);
 
 				// Step#3 - Backtrace
-				(function backtrace(g){
-					// Start at the ending point, step downwards along
-					// the descent of the wave magnitude
-					// until it finds the starting point.
-					// (Breadth-first search)
+				// Start at the ending point, step downwards along
+				// the descent of the wave magnitude
+				// until it finds the starting point.
+				// (Breadth-first search)
 
 
-					// TAOTODO:
+				// TAOTODO:
 
-
-				})(waveGrid);
 
 				return route;
 			}
