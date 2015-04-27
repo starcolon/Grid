@@ -211,8 +211,61 @@ Grid.distance = function(coord1, coord2){
 }
 
 
+
 /**
- * Traverse through the grid 
+ * Flood fill of the grid
+ * @param {grid}
+ */
+Grid.floodfill = function(grid){
+
+	/** 
+	 * Define the starting point of the algorithm
+	 * @param {Integer} i - Column coordinate
+	 * @param {Integer} j - Row coordinate
+	 */
+	this.from = function(i,j){
+		var startAt = [i,j];
+
+
+		return this;
+	}
+
+	// TAOTODO:
+
+
+
+	return this;
+}
+
+
+/**
+ * Grid route finder
+ * @param {grid}
+ */
+Grid.routeOf = Grid.route = function(grid){
+
+	/** 
+	 * Define the starting point of the algorithm
+	 * @param {Integer} i - Column coordinate
+	 * @param {Integer} j - Row coordinate
+	 */
+	this.from = function(i,j){
+		var startAt = [i,j];
+
+
+		return this;
+	}
+
+	// TAOTODO:
+
+
+
+	return this;
+}
+
+
+/**
+ * Traverse through the grid, boundary constraint is taken into account
  * @param {grid}
  */
 Grid.traverse = function(grid){
@@ -331,35 +384,6 @@ Grid.traverse = function(grid){
 		}
 
 
-		function direction(from, to){
-			if (from.i<to.i)
-				return 'RIGHT';
-			else if (from.i>to.i)
-				return 'LEFT';
-			else if (from.j<to.j)
-				return 'DOWN';
-			else if (from.j>to.j)
-				return 'UP';
-			else
-				return null;
-		}
-
-		/**
-		 * Move a point to a sibling block according to the direction
-		 * @param {Coordinate} from
-		 * @param {String} direction 
-		 * returns {Coordinate} the point after movement
-		 */
-		function move(from,direction){
-			var target = {i: from.i, j: from.j};
-			if (direction=='UP') target.j--;
-			else if (direction=='DOWN') target.j++;
-			else if (direction=='LEFT') target.i--;
-			else if (direction=='RIGHT') target.i++;
-			return target;
-		}
-
-
 		return this;
 	}
 
@@ -367,10 +391,6 @@ Grid.traverse = function(grid){
 
 	return this;
 }
-
-
-
-
 
 
 
@@ -541,6 +561,43 @@ Grid.eachCellOf = Grid.eachOf = function(grid){
 
 	return this;
 }
+
+
+/** 
+ * Find the direction notation when moving from {from} to {to}
+ * @param {coordinate} from
+ * @param {coordinate} to
+ * @returns {String} One of the 4 directions 'RIGHT','LEFT','UP','DOWN'
+ */
+function direction(from, to){
+	if (from.i<to.i)
+		return 'RIGHT';
+	else if (from.i>to.i)
+		return 'LEFT';
+	else if (from.j<to.j)
+		return 'DOWN';
+	else if (from.j>to.j)
+		return 'UP';
+	else
+		return null;
+}
+
+/**
+ * Move a point to a sibling block according to the direction
+ * @param {Coordinate} from
+ * @param {String} direction 
+ * returns {Coordinate} the point after movement
+ */
+function move(from,direction){
+	var target = {i: from.i, j: from.j};
+	if (direction=='UP') target.j--;
+	else if (direction=='DOWN') target.j++;
+	else if (direction=='LEFT') target.i--;
+	else if (direction=='RIGHT') target.i++;
+	return target;
+}
+
+
 
 // Export the module for node.js app
 if (typeof(exports)!='undefined') 
