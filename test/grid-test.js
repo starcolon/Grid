@@ -236,6 +236,7 @@ describe('Grid basic test', function(){
 			var I9 = [[9,0,0],[0,9,0],[0,0,9]];
 			g.should.deep.equal(I9);
 		})
+
 	})
 
 });
