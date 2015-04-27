@@ -169,14 +169,8 @@ Grid.siblings = function(grid){
 			[i, j+1]
 		];
 
-		var qualifiedSiblings = [];
-		sib.forEach(function(s){
-			var a = s[0], b = s[1];
-			if (Grid.has(grid)(a,b))
-				qualifiedSiblings.push([a,b]);
-		});
-
-		return qualifiedSiblings;
+		sib = _.filter(sib, function(ij){ return Grid.has(grid,ij[0],ij[1]) });
+		return sib;
 	}
 }
 
@@ -184,11 +178,11 @@ Grid.siblings = function(grid){
 /**
  * Determine if a coordinate (i,j) is in the grid
  * @param {Grid}
+ * @param {Integer} i - column coordinate
+ * @param {Integer} j - row coordinate
  */
-Grid.has = Grid.contains = function(grid){
-	return function(i,j){
-		return (i in grid && j in grid[i]);
-	}
+Grid.has = Grid.contains = function(grid,i,j){
+	return (i in grid && j in grid[i]);
 }
 
 /**
@@ -283,6 +277,7 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 		 */
 		this.to = function (i,j){
 			endAt = [i,j];
+			route = [];
 
 			/**
 			 * Define a walkable constraint
@@ -308,7 +303,7 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 					waveGrid = Grid.duplicateStructure(g,0);
 
 					// Set the 'unwalkable' cells to special value (0xFF)
-					function notWalkable = function(value,coord){
+					function notWalkable (value,coord){
 						return !walkable(value,coord)
 					}
 					waveGrid = Grid.eachCellOf(g).where(notWalkable).setTo(0xFF);
@@ -317,10 +312,12 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 				// Step#2 - Wave expansion
 				(function waveExpand(g){
 					function expandNeighbor(g,cell,magnitude){
-						var siblings = Grid.siblings(g)(cell[0],cell[1]);
+						var siblingsOf = Grid.siblings(g);
+						/*var siblings = siblingsOf(cell[0],cell[1]);
+
 						if (siblings.length==0)
 							return;
-						siblings.forEach(sib,n){
+						siblings.forEach(function(sib,n){
 							var i=sib[0], j=sib[1];
 							if (Grid.cell(i,j).of(g)==0){
 
@@ -329,19 +326,31 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 								Grid.cell(i,j).of(g).set(magnitude);
 
 								// Now expand its neighbors (recursively)
-								expandNeighbor(g,sib,magnitude+1);
+								//expandNeighbor(g,sib,magnitude+1);
 							}
-						}
+						});*/
 					}
 
 					// Expand the wave from the beginning point
 					// where its value is initially set to zero
-					expandNeighbor(g,startAt,0);
+					process.nextTick((expandNeighbor(g,startAt,0)));
 
 				})(waveGrid);
 
 				// Step#3 - Backtrace
+				(function backtrace(g){
+					// Start at the ending point, step downwards along
+					// the descent of the wave magnitude
+					// until it finds the starting point.
+					// (Breadth-first search)
 
+
+					// TAOTODO:
+
+
+				})(waveGrid);
+
+				return route;
 			}
 
 
@@ -433,7 +442,7 @@ Grid.traverse = function(grid){
 				var next = directions.splice(0,1);
 				pos = move(pos, next);
 
-				if (!Grid.has(grid)(pos.i,pos.j))
+				if (!Grid.has(grid,pos.i,pos.j))
 					throw 'Move exceeds the boundary of the grid';
 
 				route.push({i: pos.i, j: pos.j});
@@ -546,7 +555,7 @@ Grid.cell = function(i,j){
 	 * @returns {True/False}
 	 */
 	this.isIn = function(grid){
-		return Grid.has(grid)(i,j)
+		return Grid.has(grid,i,j)
 	}
 
 	/**

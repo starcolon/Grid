@@ -239,4 +239,31 @@ describe('Grid basic test', function(){
 
 	})
 
+	describe('Routing algorithm tests', function(){
+		var g = Grid.create(5,5,1);
+
+		var simpleRouting = Grid.routeOf(g).from(5,0).to(0,5);
+
+		describe('Lee routing test', function(){
+
+			wavematrix = [];
+
+			// Insert a probe to lee's algorithm function
+			simpleRouting.probed_lee = function(){
+				// Call the original lee's algorithm
+				var result = this.lee.apply(arguments);
+
+				// Probe the wave grid
+				wavematrix = this.waveGrid;
+
+				// Eject the result
+				return result;
+			}
+
+			it('should find a simple path from 5,0 to 0,5', function(){
+				route = simpleRouting.probed_lee();
+			})
+		})
+	})
+
 });
