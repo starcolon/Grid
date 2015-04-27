@@ -81,6 +81,26 @@ Grid.duplicate = function(grid){
 	return g;
 }
 
+
+/** 
+ * Duplicate only the structure of the grid but replace the values with the specied value
+ * @param {grid} grid - source grid to get duplicated
+ * @param {Object} value 
+ * @returns {grid}
+ */
+Grid.duplicateStructure = function(grid,newvalue){
+	var g = [];
+	Grid.eachCellOf(grid).do(function (value, coord){
+		if (!(coord.i in g))
+			g[coord.i] = [];
+
+		g[coord.i][coord.j] = newvalue;
+		return value;
+	});
+
+	return g;
+}
+
 /**
  * Remove a row from a grid
  * @param {grid}
@@ -242,22 +262,95 @@ Grid.floodfill = function(grid){
  * Grid route finder
  * @param {grid}
  */
-Grid.routeOf = Grid.route = function(grid){
+Grid.routeOf = Grid.route = Grid.routing = function(grid){
 
 	/** 
+	 * Grid.route(grid).from(i,j)
 	 * Define the starting point of the algorithm
 	 * @param {Integer} i - Column coordinate
 	 * @param {Integer} j - Row coordinate
 	 */
 	this.from = function(i,j){
 		var startAt = [i,j];
+		var endAt = null;
+		var walkable = function(value,coord){ return true } // By default, all paths are walkable
+
+		/**
+		 * Grid.routeOf(grid).from(i,j).to(m,n)
+		 * Define the ending point of the route
+		 * @param {Integer} i - Column coordinate
+		 * @param {Integer} j - Column coordinate
+		 */
+		this.to = function (i,j){
+			endAt = [i,j];
+
+			/**
+			 * Define a walkable constraint
+			 * @param {Function} F - A function that takes the value and coordinate and returns TRUE if the cell is walkable
+			 * @returns {None}
+			 */
+			this.where = function(F){
+				walkable = F;
+			}
+
+			/**
+			 * Route.routeOf(grid).from(i,j).to(u,v).lee()
+			 * Route from the beginning point to the ending point
+			 * using Lee's algorithm
+			 * @returns {Array} of route coordinates
+			 */
+			this.lee = function(){
+
+				waveGrid = [];
+
+				// Step#1 - Initialize the wave grid with all zeros
+				(function init(g){
+					waveGrid = Grid.duplicateStructure(g,0);
+
+					// Set the 'unwalkable' cells to special value (0xFF)
+					function notWalkable = function(value,coord){
+						return !walkable(value,coord)
+					}
+					waveGrid = Grid.eachCellOf(g).where(notWalkable).setTo(0xFF);
+				})(grid);
+
+				// Step#2 - Wave expansion
+				(function waveExpand(g){
+					function expandNeighbor(g,cell,magnitude){
+						var siblings = Grid.siblings(g)(cell[0],cell[1]);
+						if (siblings.length==0)
+							return;
+						siblings.forEach(sib,n){
+							var i=sib[0], j=sib[1];
+							if (Grid.cell(i,j).of(g)==0){
+
+								// Set the value with the current magnitude
+								// if it has not been set
+								Grid.cell(i,j).of(g).set(magnitude);
+
+								// Now expand its neighbors (recursively)
+								expandNeighbor(g,sib,magnitude+1);
+							}
+						}
+					}
+
+					// Expand the wave from the beginning point
+					// where its value is initially set to zero
+					expandNeighbor(g,startAt,0);
+
+				})(waveGrid);
+
+				// Step#3 - Backtrace
+
+			}
+
+
+			return this;
+		}
 
 
 		return this;
 	}
-
-	// TAOTODO:
-
 
 
 	return this;
@@ -507,7 +600,7 @@ Grid.eachCellOf = Grid.eachOf = function(grid){
 	var self = this;
 
 	// Default filter does not filter out any cells (always returns true)
-	self.cellFilter = function(whatever){return true};
+	self.cellFilter = function(value,coord){return true};
 
 
 	/**
