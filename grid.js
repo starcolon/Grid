@@ -316,28 +316,28 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 					if (siblings.length==0)
 						return;
 					siblings.forEach(function(sib,n){
-						var i=sib[0], j=sib[1];
-						if (Grid.cell(i,j).of(waveGrid)==0){
+						var m=sib[0], n=sib[1];
+						if (Grid.cell(m,n).of(waveGrid)==0){
 							// Set the value with the current magnitude
 							// if it has not been set
-							Grid.cell(i,j).set(waveGrid)(magnitude);
+							Grid.cell(m,n).set(waveGrid)(magnitude);
 
 							// Now expand its neighbors (recursively)
-							expandNeighbor(waveGrid,sib,magnitude+1);
+							expandNeighbor(sib,magnitude+1);
 						}
 					});
 				}
 
 				// Expand the wave from the beginning point
-				// where its value is initially set to zero
-				expandNeighbor(startAt,0);
+				// where its value is initially set to 1
+				Grid.cell(startAt[0],startAt[1]).set(waveGrid)(1);
+				expandNeighbor(startAt,2);
 
 				// Step#3 - Backtrace
 				// Start at the ending point, step downwards along
 				// the descent of the wave magnitude
 				// until it finds the starting point.
 				// (Breadth-first search)
-
 
 				// TAOTODO:
 
