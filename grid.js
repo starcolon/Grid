@@ -310,26 +310,21 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 
 				Grid.eachCellOf(waveGrid).where(notWalkable).setTo(0xFF);
 
-				
 				// Step#2 - Wave expansion
-				var markedCoords = [];
 				function expandNeighbor(cell,magnitude){
-					process.nextTick(function(){
-						var siblings = Grid.siblings(waveGrid)(cell[0],cell[1]);
-						console.log('siblings: ' + siblings);
-						if (siblings.length==0)
-							return;
-						siblings.forEach(function(sib,n){
-							var i=sib[0], j=sib[1];
-							if (Grid.cell(i,j).of(waveGrid)==0){
-								// Set the value with the current magnitude
-								// if it has not been set
-								Grid.cell(i,j).of(waveGrid).set(magnitude);
+					var siblings = Grid.siblings(waveGrid)(cell[0],cell[1]);
+					if (siblings.length==0)
+						return;
+					siblings.forEach(function(sib,n){
+						var i=sib[0], j=sib[1];
+						if (Grid.cell(i,j).of(waveGrid)==0){
+							// Set the value with the current magnitude
+							// if it has not been set
+							Grid.cell(i,j).set(waveGrid)(magnitude);
 
-								// Now expand its neighbors (recursively)
-								expandNeighbor(g,sib,magnitude+1);
-							}
-						});
+							// Now expand its neighbors (recursively)
+							expandNeighbor(waveGrid,sib,magnitude+1);
+						}
 					});
 				}
 
@@ -581,14 +576,6 @@ Grid.cell = function(i,j){
 			grid[this.i][this.j] = [];
 
 		return true;
-	}
-
-	/**
-	 * Grid.cell(i,j).siblings(grid) - Equivalent to Grid.siblings(grid)(i,j)
-	 * @param {grid}
-	 */
-	this.siblings = function(grid){
-		return Grid.siblings(grid)(i,j);
 	}
 
 	return this; 
