@@ -566,7 +566,6 @@ Grid.traverse = function(grid){
 		 */
 		function nextStep(pos,end,i){
 			if (deepPosEqual(pos,end)){
-				// addRoute(pos);
 				return pos;
 			}
 			else if (pos[i]!==end[i]){
