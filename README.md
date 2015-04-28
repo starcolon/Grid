@@ -192,3 +192,14 @@ You can also supply a where clause to narrow down the area in the grid where it 
 var isWalkableThrough = function(value,coord){ return value>10 };
 var route = Grid.routeOf(grid).from(5,5).to(6,25).where(isWalkableThrough).lee();
 ```
+
+
+## Floodfill algorithm
+Grid allows you to do a simple floodfill where conditions are applied.
+For example, if you want to floodfill your grid starting from (2,2) where the value is negative, do this:
+
+```javascript
+function isNegative(value,coord){ return value<0 };
+var coordList = Grid.floodfill(grid).where(isNegative).commit();
+// returns an array of coordinates which has been filled e.g. [{i:2,j:2},{i:3,j:2}]
+```
