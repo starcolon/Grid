@@ -38,7 +38,7 @@ var _ = require('underscore');
 /**
  * Grid namespace, not to be used as a class
  */
-var Grid = function(){}
+var Grid = {}
 
 /**
  * Create a grid object 
