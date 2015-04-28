@@ -310,4 +310,42 @@ describe('Grid basic test', function(){
 		})
 	})
 
+	describe('Floodfill tests', function(){
+		var g = Grid.create(5,5,0);
+		Grid.cell(2,2).set(g)(1); // Hole in the middle
+		Grid.cell(1,2).set(g)(1);
+		Grid.cell(3,2).set(g)(1);
+		Grid.cell(2,1).set(g)(1);
+		Grid.cell(2,3).set(g)(1);
+
+		it('should floodfill the entire grid without conditions', function(){
+			var gz = Grid.duplicate(g);
+			var filled = Grid.floodfill(gz).from(2,2).commit();
+
+			filled.should.have.length(25);
+
+			// Display the result
+			filled.forEach(function(c){
+				Grid.cell(c.i,c.j).set(gz)('*')
+			});
+			console.log(gz);
+		})
+
+		it('should floodfill the middle hole in the grid', function(){
+			var gz = Grid.duplicate(g);
+			var middle = function(value,coord){
+				return value>0
+			}
+			var filled = Grid.floodfill(gz).from(2,2).where(middle).commit();
+
+			filled.should.have.length(5);
+
+			// Display the result
+			filled.forEach(function(c){
+				Grid.cell(c.i,c.j).set(gz)('*')
+			});
+			console.log(gz);
+		})
+	})
+
 });

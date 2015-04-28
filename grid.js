@@ -239,13 +239,58 @@ Grid.floodfill = function(grid){
 	 */
 	this.from = function(i,j){
 		var startAt = [i,j];
+		this.isInArea = function(value,coord){return true} // By default, all cells are taken into account
 
+		var self = this;
+
+		/**
+		 * Grid.floodfill(grid).from(i,j).where(isInArea)
+		 * Assign a condition to the flood fill algorithm
+		 * @param {Function} F - A function which tests if a cell is included in an area
+		 */
+		this.where = function(F){
+			self.isInArea = F;
+			return self;
+		}
+
+		/**
+		 * Commit a floodfill and returns an array of the coordinates which 
+		 * are filled
+		 * @returns {Array} coordinate array
+		 */
+		this.commit = function(){
+			var filled = [];
+			var testedGrid = Grid.duplicateStructure(grid,false);
+
+			function fillMe(coord){
+				var value = Grid.cell(coord[0],coord[1]).of(grid);
+				if (self.isInArea(value,{i:coord[0],j:coord[1]}) && 
+					Grid.cell(coord[0],coord[1]).of(testedGrid)==false){
+					
+					// Add self to the output filled list
+					filled.push({i:coord[0],j:coord[1]});
+					Grid.cell(coord[0],coord[1]).set(testedGrid)(true);
+
+					// List siblings
+					var siblings = Grid.siblings(grid)(coord[0],coord[1]);
+
+					// Recursively fill start from each of the siblings
+					siblings.forEach(function(sib){
+						// Skip if tested
+						if (Grid.cell(sib[0],sib[1]).of(testedGrid)==false){
+							fillMe(sib);
+							Grid.cell(sib[0],sib[1]).set(testedGrid)(true);
+						}
+					});
+				}
+			}
+
+			fillMe(startAt);
+			return filled;
+		}
 
 		return this;
 	}
-
-	// TAOTODO:
-
 
 
 	return this;
