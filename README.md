@@ -89,9 +89,15 @@ To check if a coordinate does not belong to the grid
 Grid.cell(50,50).isNotIn(grid);
 ```
 
+
+### To get the value of a single cell
+```javascript
+Grid.cell(50,50).of(grid);
+```
+
 ### To set the value of a single cell
 ```javascript
-Grid.cell(50,50).set(3);
+Grid.cell(50,50).set(grid)(3);
 ```
 
 ### To set the value of cells given the condition
@@ -114,6 +120,12 @@ If the where clause is not supplied, all cells are applied exhaustively:
 Grid.eachOf(grid).setTo(0);
 ```
 
+### To add a specific cell to the grid
+In case you need to add a new cell outside of the current boundary of the grid, call this:
+```javascript
+Grid.cell(70,70).addTo(grid); // The value needs to be assign later on
+```
+
 ### Count the number of cells
 Where clause can be applied as a condition also:
 ```javascript
@@ -129,4 +141,47 @@ Where clause can also be supplied to filter only certain cells:
 Grid.eachOf(grid).do(function(value,coord){ return value*2 }); // multiple each cell by two
 Grid.eachOf(grid).map(Math.sqrt); // Another variant
 Grid.eachOf(grid).where(fn).map(Math.sqrt); // Supply where clause
+```
+
+
+## Traversal
+Grid allows the developer to easily traverse between any two points in the grid. Traversal functions in Grid library does not consider the values, it is just a set of blind operations.
+
+### Construct a blind route between two points
+This just constructs an array of the coordinates between two given points in the grid. It throws an exception if it cannot draw a straight line betweeen them.
+
+```javascript
+var straightroute = Grid.traverse(grid).from(1,1).to(5,3).route();
+```
+
+What it returns is an array of the JSON-like coordinate, e.g.:
+```javascript
+straightroute = [{i:1,j:1},{i:1,j:2},{i:1,j:3}]
+```
+
+If you just want a block distance (of such route) between two points, call this:
+```javascript
+var distance = Grid.traverse(grid).from(1,1).to(5,3).distance();
+```
+
+### Get a series of directions from a point to another
+If you want to know how to move from a point to another in a grid, call this:
+```javascript
+var directions = Grid.traverse(grid).from(1,1).to(5,3).directions();
+// returns something like ['DOWN','DOWN','RIGHT','RIGHT','LEFT']
+```
+
+### Given a series of directions, construct me a route
+If you have an array definition of directions like: `['LEFT','UP','UP',RIGHT']`, you can call the function below to construct an array of blocks which construct a route accordingly:
+
+```javascript
+var route = Grid.traverse(grid).from(1,1).go(['DOWN','RIGHT','RIGHT']);
+// returns something like [{i:1,j:1},{i:1,j:2},{i:2,j:2},{i:3,j:2}]
+```
+
+## Routing algorithm
+Grid implements `Lee's routing algorithm` which can be called by:
+
+```javascript
+var route = Grid.routeOf(grid).from(5,5).to(6,25).lee();
 ```

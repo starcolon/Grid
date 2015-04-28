@@ -258,8 +258,8 @@ describe('Grid basic test', function(){
 
 				// Distance between each adjacent block in the path
 				// must be exactly 2 blocks (self-included) until it reaches the end
-				expect(route[0]).to.deep.equal([4,0]);
-				expect(route[route.length-1]).to.deep.equal([0,4]);
+				expect(route[0]).to.deep.equal({i:4,j:0});
+				expect(route[route.length-1]).to.deep.equal({i:0,j:4});
 
 				console.log(route);
 
@@ -268,14 +268,14 @@ describe('Grid basic test', function(){
 				route.forEach(function (block){
 					if (previousBlock!=0){
 						var distance = Grid.traverse(g)
-							.from(previousBlock[0],previousBlock[1])
-							.to(block[0],block[1])
+							.from(previousBlock.i,previousBlock.j)
+							.to(block.i,block.j)
 							.distance();
 						expect(distance).to.equal(2);
 					}
 
-					previousBlock[0] = block[0],
-					previousBlock[1] = block[1];
+					previousBlock.i = block.i,
+					previousBlock.j = block.j;
 				});
 			})
 
@@ -294,16 +294,16 @@ describe('Grid basic test', function(){
 				route = Grid.routeOf(gz).from(4,0).to(0,4).where(isNotWall).lee();
 
 				// Route should not cross the wall
-				route.should.not.contain.an.item.that.deep.equal([4,1]);
-				route.should.not.contain.an.item.that.deep.equal([3,1]);
-				route.should.not.contain.an.item.that.deep.equal([3,2]);
-				route.should.not.contain.an.item.that.deep.equal([3,3]);
+				route.should.not.contain.an.item.that.deep.equal({i:4,j:1});
+				route.should.not.contain.an.item.that.deep.equal({i:3,j:1});
+				route.should.not.contain.an.item.that.deep.equal({i:3,j:2});
+				route.should.not.contain.an.item.that.deep.equal({i:3,j:3});
 
 				console.log(route);
 
 				// Route should start at the right spot, end at the right spot
-				expect(route[0]).to.deep.equal([4,0]);
-				expect(route[route.length-1]).to.deep.equal([0,4]);
+				expect(route[0]).to.deep.equal({i:4,j:0});
+				expect(route[route.length-1]).to.deep.equal({i:0,j:4});
 
 			})
 

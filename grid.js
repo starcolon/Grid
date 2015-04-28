@@ -359,7 +359,7 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 				// (Breadth-first search)
 
 				function moveTowardsStart(pos,route){
-					route.push(pos);
+					route.push({i:pos[0],j:pos[1]});
 
 					if (pos[0]==startAt[0] && pos[1]==startAt[1])
 						return route;
