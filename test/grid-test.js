@@ -252,7 +252,7 @@ describe('Grid basic test', function(){
 
 		describe('Lee routing test', function(){
 
-			it.skip('should find a simple path from 4,0 to 0,4', function(){
+			it('should find a simple path from 4,0 to 0,4', function(){
 				route = simpleRouting.lee();
 				route.should.have.length.above(1);
 
@@ -260,6 +260,8 @@ describe('Grid basic test', function(){
 				// must be exactly 2 blocks (self-included) until it reaches the end
 				expect(route[0]).to.deep.equal([4,0]);
 				expect(route[route.length-1]).to.deep.equal([0,4]);
+
+				console.log(route);
 
 
 				var previousBlock = [];
@@ -281,19 +283,23 @@ describe('Grid basic test', function(){
 				// Assign obstacles
 				var gz = Grid.duplicate(g);
 				Grid.cell(4,1).set(gz)('WALL');
+				Grid.cell(3,1).set(gz)('WALL');
 				Grid.cell(3,2).set(gz)('WALL');
 				Grid.cell(3,3).set(gz)('WALL');
 
 				// Generate route now
 				var isNotWall = function(value,coord){
-					return (value!='WALL')
+					return (value!=='WALL')
 				}
 				route = Grid.routeOf(gz).from(4,0).to(0,4).where(isNotWall).lee();
 
 				// Route should not cross the wall
 				route.should.not.contain.an.item.that.deep.equal([4,1]);
+				route.should.not.contain.an.item.that.deep.equal([3,1]);
 				route.should.not.contain.an.item.that.deep.equal([3,2]);
 				route.should.not.contain.an.item.that.deep.equal([3,3]);
+
+				console.log(route);
 
 				// Route should start at the right spot, end at the right spot
 				expect(route[0]).to.deep.equal([4,0]);

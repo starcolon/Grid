@@ -277,7 +277,7 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 		this.to = function (i,j){
 			endAt = [i,j];
 			this.walkable = function(value,coord){ return true } // By default, all paths are walkable
-
+			this.notWalkable = function(value,coord){ return false }
 			var self = this;
 
 			/**
@@ -288,6 +288,7 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 			 */
 			this.where = function(F){
 				self.walkable = F;
+				self.notWalkable = function(value,coord){return !self.walkable(value,coord)};
 				return self;
 			}
 
@@ -312,20 +313,14 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 			 */
 			this.lee = function(){
 
-				// Step#1 - Initialize the wave grid with all zeros
-				var waveGrid = Grid.duplicateStructure(grid,0);
+				// Step#1 - Initialize the wave grid with all high value (not walkable)
+				var waveGrid = Grid.duplicate(grid);
 
-				// Set the 'unwalkable' cells to special value (0xFF)
-				function notWalkable (value,coord){
-					return !self.walkable(value,coord)
-				}
+				// Mark walkable cells as zero
+				Grid.eachCellOf(waveGrid).where(self.walkable).setValue(0);
+				// Otherwise, assign them with very high value
+				Grid.eachCellOf(waveGrid).where(self.notWalkable).setValue(0xFF);
 
-				Grid.eachCellOf(waveGrid).where(notWalkable).setValue(0xFF);
-
-				// TAODEBUG:
-				console.log(this.walkableCellsCount());
-				console.log('waveGrid : ');
-				console.log(waveGrid);
 
 				// Step#2 - Wave expansion
 				function expandNeighbor(cell,magnitude){
@@ -356,10 +351,6 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 				// where its value is initially set to 1
 				Grid.cell(startAt[0],startAt[1]).set(waveGrid)(1);
 				expandNeighbor(startAt,2);
-
-				// TAODEBUG:
-				console.log('waveGrid after:');
-				console.log(waveGrid);
 
 				// Step#3 - Backtrace
 				// Start at the ending point, step downwards along
