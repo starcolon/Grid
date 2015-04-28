@@ -179,9 +179,16 @@ var route = Grid.traverse(grid).from(1,1).go(['DOWN','RIGHT','RIGHT']);
 // returns something like [{i:1,j:1},{i:1,j:2},{i:2,j:2},{i:3,j:2}]
 ```
 
-## Routing algorithm
+## Lee's routing algorithm
 Grid implements `Lee's routing algorithm` which can be called by:
 
 ```javascript
 var route = Grid.routeOf(grid).from(5,5).to(6,25).lee();
+// returns something like [{i:5,j:5},{i:6,j:5},{i:6,j:6} ... {i:6,j:25}]
+```
+
+You can also supply a where clause to narrow down the area in the grid where it is eligible to construct a path through like this:
+```javascript
+var isWalkableThrough = function(value,coord){ return value>10 };
+var route = Grid.routeOf(grid).from(5,5).to(6,25).where(isWalkableThrough).lee();
 ```
