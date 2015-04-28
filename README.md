@@ -1,6 +1,7 @@
 # Grid
-Grid module for virtualization projects
 [![Build Status](https://travis-ci.org/starcolon/Grid.svg?branch=master)](https://travis-ci.org/starcolon/Grid)
+
+Grid module for virtualization projects
 
 
 
