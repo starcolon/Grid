@@ -34,6 +34,19 @@ var Grid = require('./grid.js').Grid;
 
 
 /**
- * Core grid world namespace
+ * Core grid universe namespace
  */
-var GridWorld = {}
+var GridUniverse = {}
+
+
+
+
+// Export the module
+if (typeof(exports)!='undefined') 
+	exports.GridUniverse = GridUniverse;
+
+
+
+
+
+
