@@ -252,12 +252,49 @@ describe('Grid basic test', function(){
 
 		describe('Lee routing test', function(){
 
-			wavematrix = [];
-
-			it('should find a simple path from 4,0 to 0,4', function(){
+			it.skip('should find a simple path from 4,0 to 0,4', function(){
 				route = simpleRouting.lee();
 				route.should.have.length.above(1);
-				console.log(route);
+
+				// Distance between each adjacent block in the path
+				// must be exactly 2 blocks (self-included) until it reaches the end
+				expect(route[0]).to.deep.equal([4,0]);
+				expect(route[route.length-1]).to.deep.equal([0,4]);
+
+
+				var previousBlock = [];
+				route.forEach(function (block){
+					if (previousBlock!=0){
+						var distance = Grid.traverse(g)
+							.from(previousBlock[0],previousBlock[1])
+							.to(block[0],block[1])
+							.distance();
+						expect(distance).to.equal(2);
+					}
+
+					previousBlock[0] = block[0],
+					previousBlock[1] = block[1];
+				});
+			})
+
+			it('should find a simple path from 4,0 to 0,4 despite obstacles',function(){
+				// Assign obstacles
+				var gz = Grid.duplicate(g);
+				Grid.cell(4,1).set(g)('WALL');
+				Grid.cell(3,2).set(g)('WALL');
+				Grid.cell(3,3).set(g)('WALL');
+
+				// Generate route now
+				var isNotWall = function(value,coord){
+					return (value!='WALL')
+				}
+				route = simpleRouting.where(isNotWall).lee();
+
+				// Route should not cross the wall
+				route.should.not.contain.an.item.that.deep.equal([4,1]);
+				route.should.not.contain.an.item.that.deep.equal([3,2]);
+				route.should.not.contain.an.item.that.deep.equal([3,3]);
+
 			})
 
 		})

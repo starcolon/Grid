@@ -267,7 +267,6 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 	this.from = function(i,j){
 		var startAt = [i,j];
 		var endAt = null;
-		var walkable = function(value,coord){ return true } // By default, all paths are walkable
 
 		/**
 		 * Grid.routeOf(grid).from(i,j).to(m,n)
@@ -277,6 +276,7 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 		 */
 		this.to = function (i,j){
 			endAt = [i,j];
+			this.walkable = function(value,coord){ return true } // By default, all paths are walkable
 
 			var self = this;
 
@@ -286,15 +286,26 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 			 * @returns {None}
 			 */
 			this.where = function(F){
-				walkable = F;
-
+				self.walkable = F;
 				return self;
 			}
 
 			/**
+			 * Count the number of the cells in the grid
+			 * which are walkable 
+			 * @returns {Integer} Number of cells which satisfy the 'walkable' condition
+			 */
+			this.walkableCellsCount = function(){
+				return Grid.eachOf(grid).where(self.walkable).count();
+			}
+
+
+
+			/**
 			 * Route.routeOf(grid).from(i,j).to(u,v).lee()
 			 * Route from the beginning point to the ending point
-			 * using Lee's algorithm
+			 * using Lee's algorithm 
+			 * <a href="http://en.wikipedia.org/wiki/Lee_algorithm">http://en.wikipedia.org/wiki/Lee_algorithm</a>
 			 * @returns {Array} of route coordinates
 			 */
 			this.lee = function(){
@@ -304,10 +315,15 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 
 				// Set the 'unwalkable' cells to special value (0xFF)
 				function notWalkable (value,coord){
-					return !walkable(value,coord)
+					return !self.walkable(value,coord)
 				}
 
-				Grid.eachCellOf(waveGrid).where(notWalkable).setTo(0xFF);
+				Grid.eachCellOf(waveGrid).where(notWalkable).setValue(0xFF);
+
+				// TAODEBUG:
+				console.log(this.walkableCellsCount());
+				console.log('waveGrid : ');
+				console.log(waveGrid);
 
 				// Step#2 - Wave expansion
 				function expandNeighbor(cell,magnitude){
@@ -338,6 +354,10 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 				// where its value is initially set to 1
 				Grid.cell(startAt[0],startAt[1]).set(waveGrid)(1);
 				expandNeighbor(startAt,2);
+
+				// TAODEBUG:
+				console.log('waveGrid after:');
+				console.log(waveGrid);
 
 				// Step#3 - Backtrace
 				// Start at the ending point, step downwards along
@@ -388,8 +408,9 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 
 				var route = moveTowardsStart(endAt,[]);
 
-				console.log(waveGrid);
-
+				// Reverse the route so it starts from the beginning and 
+				// ends at the ending
+				route.reverse();
 				return route;
 			}
 
@@ -469,7 +490,8 @@ Grid.traverse = function(grid){
 
 
 		/**
-		 * Move the coordinate towards the directions
+		 * Grid.traverse(grid).from(i,j).go(['RIGHT','LEFT','LEFT'])
+		 * Move the coordinate towards a series of directions
 		 * If the position go beyond the boundary of the grid,
 		 * it throws an exception.
 		 * @param {Array} directions e.g. ['UP','UP','LEFT']
@@ -654,6 +676,21 @@ Grid.eachCellOf = Grid.eachOf = function(grid){
 			throw 'Requires a function clause';
 		self.cellFilter = condition;
 		return self;
+	}
+
+
+	/**
+	 * Grid.eachOf(grid).where(a,coord => ).count()
+	 * Count the number of cells which satisfy the 'where' condition
+	 * @returns {Integer} the number of cells which satisfy the where clause
+	 */
+	this.count = function(){
+		var count = 0;
+		for (var i in grid)
+			for (var j in grid[i])
+				if (self.cellFilter(grid[i][j],{i:i,j:j}))
+					++count;
+		return count;
 	}
 
 
