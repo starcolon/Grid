@@ -20,7 +20,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/starcolon/Grid.git"
-  }
+  },
   "author": "StarColon Projects",
   "license": "MIT",
   "devDependencies":{
