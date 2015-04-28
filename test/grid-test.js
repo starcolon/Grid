@@ -280,20 +280,24 @@ describe('Grid basic test', function(){
 			it('should find a simple path from 4,0 to 0,4 despite obstacles',function(){
 				// Assign obstacles
 				var gz = Grid.duplicate(g);
-				Grid.cell(4,1).set(g)('WALL');
-				Grid.cell(3,2).set(g)('WALL');
-				Grid.cell(3,3).set(g)('WALL');
+				Grid.cell(4,1).set(gz)('WALL');
+				Grid.cell(3,2).set(gz)('WALL');
+				Grid.cell(3,3).set(gz)('WALL');
 
 				// Generate route now
 				var isNotWall = function(value,coord){
 					return (value!='WALL')
 				}
-				route = simpleRouting.where(isNotWall).lee();
+				route = Grid.routeOf(gz).from(4,0).to(0,4).where(isNotWall).lee();
 
 				// Route should not cross the wall
 				route.should.not.contain.an.item.that.deep.equal([4,1]);
 				route.should.not.contain.an.item.that.deep.equal([3,2]);
 				route.should.not.contain.an.item.that.deep.equal([3,3]);
+
+				// Route should start at the right spot, end at the right spot
+				expect(route[0]).to.deep.equal([4,0]);
+				expect(route[route.length-1]).to.deep.equal([0,4]);
 
 			})
 

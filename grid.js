@@ -281,6 +281,7 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 			var self = this;
 
 			/**
+			 * Grid.routeOf(grid).from(i,j).to(m,n).where(condition)
 			 * Define a walkable constraint
 			 * @param {Function} F - A function that takes the value and coordinate and returns TRUE if the cell is walkable
 			 * @returns {None}
@@ -291,6 +292,7 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 			}
 
 			/**
+			 * Grid.routeOf(grid).from(i,j).to(m,n).where(condition).walkableCellsCount()
 			 * Count the number of the cells in the grid
 			 * which are walkable 
 			 * @returns {Integer} Number of cells which satisfy the 'walkable' condition
