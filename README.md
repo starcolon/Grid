@@ -194,6 +194,15 @@ var isWalkableThrough = function(value,coord){ return value>10 };
 var route = Grid.routeOf(grid).from(5,5).to(6,25).where(isWalkableThrough).lee();
 ```
 
+## A* routing algorithm
+A simple A* search can be done easily in Grid. Simply call this function with a cost function supplied:
+
+```javascript
+function cost(value, coord){ /* returns positive cost value */ };
+var route = Grid.routeOf(grid).from(5,5).to(6,25).astar(cost);
+```
+Where clause can also be applied to filter the cells. Also, if `cost` function is omitted, all cells are equally prioritized.
+
 
 ## Floodfill algorithm
 Grid allows you to do a simple floodfill where conditions are applied.
