@@ -525,15 +525,20 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 						routes = _.sortBy(routes, _G);
 					}
 					else{
-						// Pick the best one from the expanded list
-						expanded = _.sortBy(expanded, _F)[0];
+						// Remove the first candidate (current) off the list
+						routes.splice(0,1);
 
-						// Replace the best route so far
-						// with the expanded best route
-						routes.splice(0,1,{
-							G: current.G + expanded.F, 
-							R: expanded.R
+						// Register all newly expanded routes
+						expanded.forEach(function(ex){
+							var newroute = {
+								G: current.G + ex.F, 
+								R: ex.R
+							};
+							routes.push(newroute);
 						});
+
+						// Keep the route list sorted, the best goes first
+						routes = _.sortBy(routes, _G);
 					}
 				}
 
