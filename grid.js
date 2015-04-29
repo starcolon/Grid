@@ -453,6 +453,92 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 			}
 
 
+			/**
+			 * Route.routeOf(grid).from(i,j).to(u,v).astar(costFunction)
+			 * @param {Function} cost - Cost function which takes (value, coord) and returns positive number cost value
+			 * @returns {Array} Route constructed with the algorithm
+			 **/
+			this.astar = function(cost){
+
+				// If cost function is not defined,
+				// all coordinates make no cost difference
+				cost = cost || function(value,coord){return 1};
+
+				var routes = [
+					{G:0, R:[[startAt[0],startAt[1]]]} // Initial point
+				];
+
+				function isEndPoint(coord){ return coord[0]==endAt[0] && coord[1]==endAt[1]}
+
+				function _G(route){return route.G}
+				function _F(route){return route.F}
+
+				function expand(current){
+					var lastNode = _.last(current.R);
+					var siblings = Grid.siblings(grid)(lastNode[0],lastNode[1]);
+
+					// Filter out if not walkable
+					// also filter out if the sibling already repeats the 
+					// previous path
+					function isRepeatInCurrent(sib){
+						return _.any(current.R, function(r){
+							return r[0]==sib[0] && r[1]==sib[1]
+						})
+					}
+					function isNotWalkable(sib){
+						var sib_value = Grid.cell(sib[0],sib[1]).of(grid);
+						var sib_coord = {i: sib[0], j: sib[1]};
+						return !self.walkable(sib_value, sib_coord )
+					}
+
+					siblings = _.reject(siblings, isRepeatInCurrent);
+					siblings = _.reject(siblings, isNotWalkable);
+
+					// Map each siblings with cost function
+					siblings = _.map(siblings, function(sib){
+						var sib_value = Grid.cell(sib[0],sib[1]).of(grid);
+						var sib_coord = {i: sib[0], j: sib[1]};
+						var newroute = current.R.concat(sib);
+						return {F: cost(sib_value, sib_coord), R: newroute}
+					});
+					return siblings;
+				}
+
+				// Keep constructing the route until it reaches the final goal
+				while (!isEndPoint(_.last(_.first(routes).R))){
+					// Expand the first (least aggegrated cost G)
+					var current = _.first(routes);
+					var expanded = expand(current);
+
+					if (expanded.length==0){
+						// If expanded but nothing returned,
+						// Multiply the aggegrated cost of it and repeat the process
+						routes[0].G *= 10;
+						routes = _.sortBy(routes, _G);
+					}
+					else{
+						// Pick the best one from the expanded list
+						expanded = _.sortBy(expanded, _F)[0];
+
+						// Add this expanded route to the route list and repeat
+						routes.splice(0,0,{
+							G: current.G + expanded.F, 
+							R: expanded.R
+						});
+					}
+
+				}
+
+				// Take and wrap the constructed route
+				var route = _.first(routes).R;
+				route = route.map(function(r){
+					return {i: r[0], j: r[1]}
+				});
+
+				return route;
+			}
+
+
 			return this;
 		}
 
