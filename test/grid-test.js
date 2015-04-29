@@ -349,10 +349,34 @@ describe('Grid basic test', function(){
 				expect(route[route.length-1]).to.deep.equal({i:0,j:4});
 			})
 
-			it.skip('should find given a wall and cost function', function(){
+			it('should find given a wall and cost function', function(){
 
+				// Assign obstacles
+				var gz = Grid.duplicate(g);
+				Grid.cell(2,1).set(gz)('WALL');
+				Grid.cell(0,3).set(gz)('WALL');
+				Grid.cell(2,2).set(gz)('WALL');
 
+				// Generate route now
+				var isNotWall = function(value,coord){
+					return (value!=='WALL')
+				}
+				var cost = function(value,coord){
+					// Rightmost columns cost less
+					return 10/(coord.i+1)
+				}
+				route = Grid.routeOf(gz).from(4,0).to(0,4).where(isNotWall).astar(cost);
 
+				// Route should not cross the wall
+				route.should.not.contain.an.item.that.deep.equal({i:2,j:1});
+				route.should.not.contain.an.item.that.deep.equal({i:2,j:2});
+				route.should.not.contain.an.item.that.deep.equal({i:0,j:3});
+
+				console.log(route);
+
+				// Route should start at the right spot, end at the right spot
+				expect(route[0]).to.deep.equal({i:4,j:0});
+				expect(route[route.length-1]).to.deep.equal({i:0,j:4});
 			})
 		})
 	})
