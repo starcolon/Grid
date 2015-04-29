@@ -465,7 +465,7 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 				cost = cost || function(value,coord){return 1};
 
 				var routes = [
-					{G:0, R:[[startAt[0],startAt[1]]]} // Initial point
+					{G:0, R:[startAt]} // Initial point
 				];
 
 				function isEndPoint(coord){ return coord[0]==endAt[0] && coord[1]==endAt[1]}
@@ -498,7 +498,7 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 					siblings = _.map(siblings, function(sib){
 						var sib_value = Grid.cell(sib[0],sib[1]).of(grid);
 						var sib_coord = {i: sib[0], j: sib[1]};
-						var newroute = current.R.concat(sib);
+						var newroute = current.R.concat([sib]);
 						return {F: cost(sib_value, sib_coord), R: newroute}
 					});
 					return siblings;
@@ -510,6 +510,10 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 					var current = _.first(routes);
 					var expanded = expand(current);
 
+					// TAODEBUG:
+					console.log('expanded: ');
+					console.log(expanded);
+
 					if (expanded.length==0){
 						// If expanded but nothing returned,
 						// Multiply the aggegrated cost of it and repeat the process
@@ -520,13 +524,18 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 						// Pick the best one from the expanded list
 						expanded = _.sortBy(expanded, _F)[0];
 
-						// Add this expanded route to the route list and repeat
-						routes.splice(0,0,{
+						// Replace the best route so far
+						// with the expanded best route
+						routes.splice(0,1,{
 							G: current.G + expanded.F, 
 							R: expanded.R
 						});
 					}
 
+					// TAODEBUG:
+					console.log('routes: ');
+					console.log(routes);
+					break;
 				}
 
 				// Take and wrap the constructed route

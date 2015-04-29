@@ -308,6 +308,56 @@ describe('Grid basic test', function(){
 			})
 
 		})
+
+		describe('A* search tests', function(){
+			var g = Grid.create(5,5,1);
+
+			var simpleRouting = Grid.routeOf(g).from(4,0).to(0,4);
+
+			it('should find a simple path without cost function', function(){
+				route = simpleRouting.astar();
+
+				// TAODEBUG:
+				// console.log(route);
+
+				route.should.have.length.above(1);
+				expect(route[0]).to.deep.equal({i:4,j:0});
+				expect(route[route.length-1]).to.deep.equal({i:0,j:4});
+			})
+
+			it.skip('should find a path given a wall, no cost function', function(){
+				// Assign obstacles
+				var gz = Grid.duplicate(g);
+				Grid.cell(4,1).set(gz)('WALL');
+				Grid.cell(3,1).set(gz)('WALL');
+				Grid.cell(3,2).set(gz)('WALL');
+				Grid.cell(3,3).set(gz)('WALL');
+
+				// Generate route now
+				var isNotWall = function(value,coord){
+					return (value!=='WALL')
+				}
+				route = Grid.routeOf(gz).from(4,0).to(0,4).where(isNotWall).astar();
+
+				// Route should not cross the wall
+				route.should.not.contain.an.item.that.deep.equal({i:4,j:1});
+				route.should.not.contain.an.item.that.deep.equal({i:3,j:1});
+				route.should.not.contain.an.item.that.deep.equal({i:3,j:2});
+				route.should.not.contain.an.item.that.deep.equal({i:3,j:3});
+
+				console.log(route);
+
+				// Route should start at the right spot, end at the right spot
+				expect(route[0]).to.deep.equal({i:4,j:0});
+				expect(route[route.length-1]).to.deep.equal({i:0,j:4});
+			})
+
+			it.skip('should find given a wall and cost function', function(){
+
+
+
+			})
+		})
 	})
 
 	describe('Floodfill tests', function(){
