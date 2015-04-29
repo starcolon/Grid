@@ -507,12 +507,8 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 				// Keep constructing the route until it reaches the final goal
 				while (!isEndPoint(_.last(_.first(routes).R))){
 					// Expand the first (least aggegrated cost G)
-					var current = _.first(routes);
+					var current = _.first(_.sortBy(routes,_F));
 					var expanded = expand(current);
-
-					// TAODEBUG:
-					console.log('expanded: ');
-					console.log(expanded);
 
 					if (expanded.length==0){
 						// If expanded but nothing returned,
@@ -531,11 +527,6 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 							R: expanded.R
 						});
 					}
-
-					// TAODEBUG:
-					console.log('routes: ');
-					console.log(routes);
-					break;
 				}
 
 				// Take and wrap the constructed route

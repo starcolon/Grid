@@ -317,15 +317,14 @@ describe('Grid basic test', function(){
 			it('should find a simple path without cost function', function(){
 				route = simpleRouting.astar();
 
-				// TAODEBUG:
-				// console.log(route);
+				console.log(route);
 
 				route.should.have.length.above(1);
 				expect(route[0]).to.deep.equal({i:4,j:0});
 				expect(route[route.length-1]).to.deep.equal({i:0,j:4});
 			})
 
-			it.skip('should find a path given a wall, no cost function', function(){
+			it('should find a path given a wall, no cost function', function(){
 				// Assign obstacles
 				var gz = Grid.duplicate(g);
 				Grid.cell(4,1).set(gz)('WALL');
