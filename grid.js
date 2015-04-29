@@ -462,7 +462,9 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 
 				// If cost function is not defined,
 				// all coordinates make no cost difference
-				cost = cost || function(value,coord){return 1};
+				cost = cost || function(value,coord){
+					return 1
+				};
 
 				var routes = [
 					{G:0, R:[startAt]} // Initial point
@@ -493,6 +495,12 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 
 					siblings = _.reject(siblings, isRepeatInCurrent);
 					siblings = _.reject(siblings, isNotWalkable);
+
+					// If the siblings include the ending point,
+					// just choose it as a sole outcome
+					if (_.any(siblings, isEndPoint)){
+						siblings = [endAt];
+					}
 
 					// Map each siblings with cost function
 					siblings = _.map(siblings, function(sib){
