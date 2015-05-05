@@ -129,7 +129,7 @@ Grid.eachOf(grid).setTo(0);
 ### To alter a property of each cell
 In case we want to apply a function (mapper) onto a specific property of each cell which satisfy the `where` clause, use:
 ```javascript
-Grid.eachOf(grid).applyProperty('value',Math.sqrt); // Sqrt all cell.value
+Grid.eachOf(grid).applyPropertyAll('value',Math.sqrt); // Sqrt all cell.value
 ```
 
 ### To add a specific cell to the grid
