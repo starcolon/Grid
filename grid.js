@@ -877,7 +877,7 @@ Grid.eachCellOf = Grid.eachOf = function(grid){
 	}
 
 	/**
-	 * Grid.eachOf(grid).applyPropertyAll(prop,F)
+	 * Grid.eachOf(grid).applyProperty(prop,F)
 	 * Apply function F on the specific property of each cells which 
 	 * satisfy the filter condition
 	 * @param {String} prop - Property name
@@ -885,7 +885,7 @@ Grid.eachCellOf = Grid.eachOf = function(grid){
 	 *                       and returns the new value
 	 * @returns {Integer} Number of the affected cells 
 	 */
-	this.applyPropertyAll = function(prop,F){
+	this.applyProperty = function(prop,F){
 		let count=0;
 		for (var i in grid)
 			for (var j in grid[i])
