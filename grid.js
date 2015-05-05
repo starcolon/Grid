@@ -54,14 +54,18 @@ Grid.create = function(numRow,numCol,defaultValue){
 		throw "Number of columns and rows must be positive integer." 
 
 	defaultValue = defaultValue || 0;
-	let grid = [];
-
+	let grid = Array.apply(null, Array(numCol)).map(function generateRow(){
+		return Array.apply(null, Array(numRow)).map(function generateCell(){
+			return defaultValue
+		})
+	});
+	/*
 	_(numCol).times(function populateRow(){
 		let row = [];
 		_(numRow).times(function(){row.push(defaultValue)});
 		grid.push(row);	
 	});
-
+	*/
 	return grid;
 }
 
@@ -754,11 +758,14 @@ Grid.cell = function(i,j){
 		return function (prop,F){
 			if (self.isNotIn(grid))
 				throw 'Cell is out of bound';
-			if (!grid[coord.i][coord.j].hasOwnProperty(prop)){
-				grid[coord.i][coord.j][prop] = null;
+			let value = grid[coord.i][coord.j];
+			if (!value.hasOwnProperty(prop)){
+				value[prop] = null;
 			}
 			// Map F now
-			grid[coord.i][coord.j][prop] = F(grid[coord.i][coord.j][prop]);
+			value[prop] = F(value[prop]);
+			grid[coord.i][coord.j] = value;
+			return grid;
 		}
 	}
 
