@@ -53,20 +53,17 @@ Grid.create = function(numRow,numCol,defaultValue){
 	if (numRow * numCol <= 0) 
 		throw "Number of columns and rows must be positive integer." 
 
-	defaultValue = defaultValue || 0;
-	let defaultVector = [defaultValue];
-	let grid = Array.apply(null, Array(numCol)).map(function generateRow(){
-		return Array.apply(null, Array(numRow)).map(function generateCell(){
-			return defaultVector.slice()[0]
-		})
+	let grid = Array.apply(null, new Array(numCol)).map(function(){
+		return Array.apply(null, new Array(numRow)).map(function(){
+			switch (typeof(defaultValue)){
+				case 'string': return String.prototype.valueOf.apply(defaultValue);
+				case 'number': return Number.prototype.valueOf.apply(defaultValue);
+				case 'object': return Object.prototype.valueOf.apply(defaultValue);
+				default: return undefined;	
+			}
+		});
 	});
-	/*
-	_(numCol).times(function populateRow(){
-		let row = [];
-		_(numRow).times(function(){row.push(defaultValue)});
-		grid.push(row);	
-	});
-	*/
+
 	return grid;
 }
 
