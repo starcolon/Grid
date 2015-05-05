@@ -744,7 +744,7 @@ Grid.cell = function(i,j){
 	 * Grid.cell(i,j).applyProperty(grid)('items',pushItem)
 	 * Apply function F on the cell property
 	 * @param {grid}
-	 * @returns {Closure} // TAOTODO: Test me
+	 * @returns {Closure} 
 	 */
 	this.applyProperty = function(grid){
 		/*
