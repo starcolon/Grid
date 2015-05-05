@@ -101,6 +101,11 @@ Grid.cell(50,50).of(grid);
 Grid.cell(50,50).set(grid)(3);
 ```
 
+### To alter a property of a single cell
+```javascript
+Grid.cell(50,50).applyProperty(grid)('v',function(v){return v*2}); // sqr the cell.v
+```
+
 ### To set the value of cells given the condition
 Multiple cell value assignments by condition can be done by this function:
 ```javascript
@@ -119,6 +124,12 @@ var condition = function(value,coord){
 If the where clause is not supplied, all cells are applied exhaustively:
 ```javascript
 Grid.eachOf(grid).setTo(0);
+```
+
+### To alter a property of each cell
+In case we want to apply a function (mapper) onto a specific property of each cell which satisfy the `where` clause, use:
+```javascript
+Grid.eachOf(grid).applyProperty('value',Math.sqrt); // Sqrt all cell.value
 ```
 
 ### To add a specific cell to the grid
