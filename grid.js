@@ -58,7 +58,7 @@ Grid.create = function(numRow,numCol,defaultValue){
 			switch (typeof(defaultValue)){
 				case 'string': return String.prototype.valueOf.apply(defaultValue);
 				case 'number': return Number.prototype.valueOf.apply(defaultValue);
-				case 'object': return Object.prototype.valueOf.apply(defaultValue);
+				case 'object': return {};
 				default: return undefined;	
 			}
 		});
