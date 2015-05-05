@@ -5,6 +5,9 @@ chai.should();
 chai.use(require('chai-things'));
 chai.config.includeStack = true;
 
+"use strict";
+
+
 // Dependency
 var Grid = require('../grid.js').Grid;
 
