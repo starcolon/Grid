@@ -579,15 +579,15 @@ Grid.traverse = function(grid){
 	 */
 	this.from = function(i,j){
 
-		var startAt = [i,j];
-		var route = [{i:i, j:j}];
+		let startAt = [i,j];
+		let route = [{i:i, j:j}];
 		
 		/**
 		 * Grid.traverse(grid).from(i,j).to(m,n)
 		 * Walk straight to the coordinate
 		 */
 		this.to = function(m,n){
-			var stopAt = [m,n];
+			let stopAt = [m,n];
 			
 			// Construct a route from the beginning point to the target point
 			nextStep(startAt, stopAt, 1);
@@ -615,7 +615,7 @@ Grid.traverse = function(grid){
 			 * @returns {Array}
 			 */
 			this.directions = function(){
-				var directions = [];
+				let directions = [];
 				_.reduce(route, function(previous,next){
 					directions.push(direction(previous,next));
 					previous = next;
@@ -637,10 +637,10 @@ Grid.traverse = function(grid){
 		 * @returns {Array} Route
 		 */
 		this.go = function(directions){
-			var pos = {i: i, j: j};
+			let pos = {i: i, j: j};
 			route = [{i: i, j: j}];
 			while (directions.length>0){
-				var next = directions.splice(0,1);
+				let next = directions.splice(0,1);
 				pos = move(pos, next);
 
 				if (!Grid.has(grid,pos.i,pos.j))
@@ -713,7 +713,7 @@ Grid.cell = function(i,j){
 	// Assign the coordinate reference
 	this.i = i; this.j = j; 
 
-	var self = this;
+	let self = this;
 
 	/**
 	 * Grid.cell(i,j).of(grid) - Returns a cell value
@@ -821,7 +821,7 @@ Grid.eachCellOf = Grid.eachOf = function(grid){
 
 	if (typeof(grid)=='undefined')
 		throw 'Grid has not been defined';
-	var self = this;
+	let self = this;
 
 	// Default filter does not filter out any cells (always returns true)
 	self.cellFilter = function(value,coord){return true};
@@ -846,7 +846,7 @@ Grid.eachCellOf = Grid.eachOf = function(grid){
 	 * @returns {Integer} the number of cells which satisfy the where clause
 	 */
 	this.count = function(){
-		var count = 0;
+		let count = 0;
 		for (var i in grid)
 			for (var j in grid[i])
 				if (self.cellFilter(grid[i][j],{i:i,j:j}))
@@ -862,7 +862,7 @@ Grid.eachCellOf = Grid.eachOf = function(grid){
 	 * @returns {Integer} Number of cells affected by the function
 	 */
 	this.setTo = this.setValue = function(value){
-		var count=0;
+		let count=0;
 		for (var i in grid)
 			for (var j in grid[i])
 				if (self.cellFilter(grid[i][j],{i:i,j:j})){
@@ -882,7 +882,7 @@ Grid.eachCellOf = Grid.eachOf = function(grid){
 	 * @returns {Integer} Number of the affected cells 
 	 */
 	this.applyProperty = function(prop,F){
-		var count=0;
+		let count=0;
 		for (var i in grid)
 			for (var j in grid[i])
 				if (self.cellFilter(grid[i][j],{i:i,j:j})){
@@ -902,7 +902,7 @@ Grid.eachCellOf = Grid.eachOf = function(grid){
 	 * @returns {Integer} Number of cells affected by the function
 	 */
 	this.do = this.map = function(F){
-		var count=0;
+		let count=0;
 		for (var i in grid)
 			for (var j in grid[i])
 				if (self.cellFilter(grid[i][j],{i:i,j:j})){
@@ -943,7 +943,7 @@ function direction(from, to){
  * returns {Coordinate} the point after movement
  */
 function move(from,direction){
-	var target = {i: from.i, j: from.j};
+	let target = {i: from.i, j: from.j};
 	if (direction=='UP') target.j--;
 	else if (direction=='DOWN') target.j++;
 	else if (direction=='LEFT') target.i--;
