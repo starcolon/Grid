@@ -119,6 +119,27 @@ describe('Grid basic test', function(){
 			expect(g[8][3]).to.equal(83);
 		})
 
+		it('should map property value', function(){
+			// Prepare object data
+			Grid.eachOf(g).do(function initCellValue(v,i,j){ return {a:i*i,b:-i} });
+
+			function firstRow(v,i,j){ return i==0 };
+			Grid.eachOf(g).where(firstRow).applyProperty('a',Math.sqrt);
+
+			// Check
+			expect(g[0][0]).to.have.property('a');
+			expect(g[0][0]).to.have.property('b');
+			expect(g[0][3]).to.have.property('a');
+			expect(g[0][3]).to.have.property('b');
+			expect(g[3][3]).not.to.have.property('a');
+			expect(g[3][3]).not.to.have.property('b');
+
+
+			for (var i in g){
+				expect(g[i][0]['a']).to.equal(i);
+				expect(g[i][0]['b']).to.equal(-i);
+			}
+		})
 
 	})
 
