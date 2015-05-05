@@ -54,9 +54,10 @@ Grid.create = function(numRow,numCol,defaultValue){
 		throw "Number of columns and rows must be positive integer." 
 
 	defaultValue = defaultValue || 0;
+	let defaultVector = [defaultValue];
 	let grid = Array.apply(null, Array(numCol)).map(function generateRow(){
 		return Array.apply(null, Array(numRow)).map(function generateCell(){
-			return defaultValue
+			return defaultVector.slice()[0]
 		})
 	});
 	/*
