@@ -711,9 +711,8 @@ Grid.cell = function(i,j){
 		throw 'Coordinate i, j must be defined as integer';
 
 	// Assign the coordinate reference
-	this.i = i; this.j = j; 
-
 	let self = this;
+	let coord = {i:i, j:j};
 
 	/**
 	 * Grid.cell(i,j).of(grid) - Returns a cell value
@@ -724,7 +723,7 @@ Grid.cell = function(i,j){
 	this.of = function(grid){
 		if (this.isNotIn(grid))
 			return undefined;
-		return grid[i][j];
+		return grid[coord.i][coord.j];
 	}
 
 	/**
@@ -736,7 +735,7 @@ Grid.cell = function(i,j){
 		return function(value){
 			if (self.isNotIn(grid))
 				self.addTo(grid);
-			grid[self.i][self.j] = value;
+			grid[coord.i][coord.j] = value;
 		}
 	}
 
@@ -755,11 +754,11 @@ Grid.cell = function(i,j){
 		return function (prop,F){
 			if (self.isNotIn(grid))
 				throw 'Cell is out of bound';
-			if (!grid[self.i][self.j].hasOwnProperty(prop)){
-				grid[self.i][self.j][prop] = null;
+			if (!grid[coord.i][coord.j].hasOwnProperty(prop)){
+				grid[coord.i][coord.j][prop] = null;
 			}
 			// Map F now
-			grid[self.i][self.j][prop] = F(grid[self.i][self.j][prop]);
+			grid[coord.i][coord.j][prop] = F(grid[coord.i][coord.j][prop]);
 		}
 	}
 
@@ -768,7 +767,7 @@ Grid.cell = function(i,j){
 	 * @returns {JSON}
 	 */
 	this.coord = function(){
-		return {i: self.i, j: self.j}
+		return {i: coord.i, j: coord.j}
 	}
 
 
@@ -778,7 +777,7 @@ Grid.cell = function(i,j){
 	 * @returns {True/False}
 	 */
 	this.isIn = function(grid){
-		return Grid.has(grid,i,j)
+		return Grid.has(grid,coord.i,coord.j)
 	}
 
 	/**
@@ -801,10 +800,10 @@ Grid.cell = function(i,j){
 			return false;
 
 		// Register a cell
-		if (!grid.hasOwnProperty(this.i))
-			grid[this.i] = [];
-		if (!grid[i].hasOwnProperty(this.j))
-			grid[this.i][this.j] = [];
+		if (!grid.hasOwnProperty(coord.i))
+			grid[coord.i] = [];
+		if (!grid[i].hasOwnProperty(coord.j))
+			grid[coord.i][coord.j] = [];
 
 		return true;
 	}
