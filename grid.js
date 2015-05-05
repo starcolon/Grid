@@ -739,6 +739,29 @@ Grid.cell = function(i,j){
 	}
 
 	/**
+	 * Grid.cell(i,j).applyProperty(grid)('items',pushItem)
+	 * Apply function F on the cell property
+	 * @param {grid}
+	 * @returns {Closure} // TAOTODO: Test me
+	 */
+	this.applyProperty = function(grid){
+		/*
+		 * @param {String} prob - property name
+		 * @param {Function} F - mapper function which takes property value as a argument and
+		 *                     returns a new value
+		 */
+		return function (prop,F){
+			if (self.isNotIn(grid))
+				throw 'Cell is out of bound';
+			if (!grid[self.i][self.j].hasOwnProperty(prop)){
+				grid[self.i][self.j][prop] = null;
+			}
+			// Map F now
+			grid[self.i][self.j][prop] = F(grid[self.i][self.j][prop]);
+		}
+	}
+
+	/**
 	 * Grid.cell(i,j).coord() - Returns a coordinate JSON object
 	 * @returns {JSON}
 	 */
@@ -842,6 +865,28 @@ Grid.eachCellOf = Grid.eachOf = function(grid){
 			for (var j in grid[i])
 				if (self.cellFilter(grid[i][j],{i:i,j:j})){
 					grid[i][j] = value;
+					++count;
+				}
+		return count;
+	}
+
+	/**
+	 * Grid.eachOf(grid).applyProperty(prop,F)
+	 * Apply function F on the specific property of each cells which 
+	 * satisfy the filter condition
+	 * @param {String} prop - Property name
+	 * @param {Function} F - Mapper function which takes the old property value
+	 *                       and returns the new value
+	 * @returns {Integer} Number of the affected cells 
+	 */ // TAOTODO: Test me
+	this.applyProperty = function(prop,F){
+		var count=0;
+		for (var i in grid)
+			for (var j in grid[i])
+				if (self.cellFilter(grid[i][j],{i:i,j:j})){
+					if (!grid[i][j].hasOwnProperty(prop))
+						grid[i][j][prop] = null;
+					grid[i][j][prop] = F(grid[i][j][prop]);
 					++count;
 				}
 		return count;
