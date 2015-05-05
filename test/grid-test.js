@@ -106,6 +106,13 @@ describe('Grid basic test', function(){
 			expect(Grid.cell(0,0).of(g)).to.equal('0:0');
 		});
 
+		it('should map property of a cell', function(){
+			Grid.cell(5,2).set(g)({foo:1024});
+			Grid.cell(5,2).applyProperty(g)('foo',Math.sqrt);
+
+			expect(Grid.cell(5,2).of(g)['foo']).to.equal(32);
+		})
+
 		it('should generate values for each cell using {eachCell} function', function(){
 			var setValue = function(e, i, j){
 				g[i][j] = i*10+j;
