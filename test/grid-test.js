@@ -132,7 +132,7 @@ describe('Grid basic test', function(){
 			Grid.eachOf(g).where(firstRow).do(function (v,coord){ 
 				return {a:parseInt(coord.i*coord.i), b: -coord.i} 
 			});
-			Grid.eachOf(g).where(firstRow).applyPropertyAll('a',Math.sqrt);
+			Grid.eachOf(g).where(firstRow).applyProperty('a',Math.sqrt);
 
 			// Check
 			expect(g[0][0]).to.have.property('a');
