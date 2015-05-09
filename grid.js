@@ -550,8 +550,8 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 						routes = _.sortBy(routes, _G);
 
 						if (verbose==true){
-							console.log('Routes expanded so far:'.cyan);
-							console.log(routes);
+							console.log('Best route expanded so far:'.cyan);
+							console.log(_.first(routes));
 						}
 					}
 				}
