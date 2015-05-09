@@ -405,6 +405,29 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 				Grid.cell(startAt[0],startAt[1]).set(waveGrid)(1);
 				expandNeighbor(startAt,2);
 
+				if (verbose==true){
+					// Display wave matrix
+					let lines = [];
+
+					for (var i in waveGrid)
+						for (var j in waveGrid[i]){
+							let cell = Grid.cell(parseInt(i),parseInt(j)).of(waveGrid);
+							let block = ''
+
+							if (cell<10) block = '[ '+cell+' ]';
+							else if (cell<100) block = '[ '+cell+']';
+							else block = '['+cell+']';
+
+							if (!(j in lines))
+								lines[j] = ''
+
+							lines[j] += block;
+						}
+
+					for (var l in lines)
+						console.log(lines[l])
+				}
+
 				// Step#3 - Backtrace
 				// Start at the ending point, step downwards along
 				// the descent of the wave magnitude
@@ -414,10 +437,10 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 				function moveTowardsStart(pos,prev,route){
 					route.push({i:parseInt(pos[0]),j:parseInt(pos[1])});
 
-					if (verbose==true) {
+					/*if (verbose==true) {
 						console.log('route so far:'.cyan);
 						console.log(route);
-					}
+					}*/
 
 					if (pos[0]==startAt[0] && pos[1]==startAt[1])
 						return route;
