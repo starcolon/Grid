@@ -359,9 +359,12 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 			 * Route from the beginning point to the ending point
 			 * using Lee's algorithm 
 			 * <a href="http://en.wikipedia.org/wiki/Lee_algorithm">http://en.wikipedia.org/wiki/Lee_algorithm</a>
+			 * @param {bool} verbose
 			 * @returns {Array} of route coordinates
 			 */
-			this.lee = function(){
+			this.lee = function(verbose){
+
+				verbose = verbose || false;
 
 				// Step#1 - Initialize the wave grid with all high value (not walkable)
 				var waveGrid = Grid.duplicate(grid);
@@ -411,6 +414,11 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 				function moveTowardsStart(pos,prev,route){
 					route.push({i:parseInt(pos[0]),j:parseInt(pos[1])});
 
+					if (verbose==true) {
+						console.log('route so far:'.cyan);
+						console.log(route);
+					}
+
 					if (pos[0]==startAt[0] && pos[1]==startAt[1])
 						return route;
 
@@ -446,6 +454,9 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 				 	}
 
 				 	if (routeOptions.length==0){
+				 		if (verbose==true)
+				 			console.log('No next paths found :('.red);
+
 				 		// If the current pos only leads to the dead end,
 				 		// mark it unwalkable
 				 		Grid.cell(parseInt(pos[0]),parseInt(pos[1])).set(waveGrid)(0xFF);
@@ -453,11 +464,14 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 				 		// Recess the route by one block
 				 		route = route.slice(0,route.length-1);
 
-				 		if (prev==null)
+				 		if (prev==null || (prev[0]==pos[0] && prev[1]==pos[1]))
 				 			return [];
 				 		else{
 				 			var lastblock = route[route.length-1];
 				 			var prev0 = [lastblock.i, lastblock.j];
+				 			if (verbose==true){
+				 				console.log('recess! '.red + JSON.stringify(prev0));
+				 			}
 				 			return moveTowardsStart(prev,prev0,route);
 				 		}
 				 	}
