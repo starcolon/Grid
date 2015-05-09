@@ -531,7 +531,7 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 						routes[0].G *= 10;
 						routes = _.sortBy(routes, _G);
 						if (verbose==true) 
-							console.log((JSON.stringify(route[0].G) + ' got a penalty').yellow);
+							console.log((JSON.stringify(routes[0].G) + ' got a penalty').yellow);
 					}
 					else{
 						// Remove the first candidate (current) off the list
