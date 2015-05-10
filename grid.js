@@ -510,6 +510,9 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 
 				verbose = verbose || false;
 
+				if (verbose==true)
+					console.log(JSON.stringify(startAt) + ' --> ' + JSON.stringify(endAt));
+
 				// If cost function is not defined,
 				// all coordinates make no cost difference
 				cost = cost || function(value,coord){
@@ -523,7 +526,7 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 				var fScore = 0;
 
 				function sortByCost(a,b){ return a.cost<b.cost }
-				function isPermissed(c){
+				function isPermitted(c){
 					return self.walkable(Grid.cell(c[0],c[1]).of(grid), {i:c[0],j:c[1]})
 				}
 				function isInSet(set,coord){
@@ -539,7 +542,14 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 						return coords[0].cost;
 				}
 				function setGScore(coord,g){
-					gScore = _.reject(gScore, function(e){ return e.coord.i==coord.i && e.coord.j==coord.j });
+					for (var k in gScore){
+						if (gScore[k].coord.i==coord.i && gScore[k].coord.j==coord.j){
+							// Update the existing score record
+							gScore[k].cost = g;
+							return ;
+						}
+					}
+
 					gScore.push({cost: g, coord:{i:coord.i, j:coord.j}});
 				}
 				function getCameFrom(dest){
@@ -550,7 +560,14 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 						return coords[0].from;
 				}
 				function setCameFrom(src,dest){
-					cameFrom = _.reject(cameFrom, function(c){ return c.to.i==dest.i && c.to.j==dest.j });
+					for (var c in cameFrom){
+						if (cameFrom[c].to.i==dest.i && cameFrom[c].to.j==dest.j){
+							// Update the existing record
+							cameFrom[c].from = { i:src.i, j:src.j };
+							return ;
+						}
+					}
+
 					cameFrom.push({
 						to:{ i:dest.i, j:dest.j }, 
 						from:{ i:src.i, j:src.j }
@@ -567,7 +584,7 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 					closedSet.push({cost:0, coord:{i:current.i, j:current.j}});
 
 					var siblings = Grid.siblings(grid)(current.i, current.j);
-					siblings = _.filter(siblings, isPermissed);
+					siblings = _.filter(siblings, isPermitted);
 					if (verbose==true){
 						console.log('cells registered: ' + cameFrom.length);
 					}

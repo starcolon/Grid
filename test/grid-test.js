@@ -357,24 +357,23 @@ describe('Grid basic test', function(){
 		})
 
 		describe('A* search tests', function(){
-			var g = Grid.create(5,5,1);
-			var simpleRouting = Grid.routeOf(g).from(4,0).to(0,4);
+			var grid = Grid.create(8,8,1);
 
 			it('should find a simple path without cost function', function(){
 				var verbose = true;
 				var cost = function(){return 1}
-				route = simpleRouting.astar(cost,verbose);
+				var route = Grid.routeOf(grid).from(2,0).to(0,7).astar(cost,verbose);
 
 				console.log(route);
 
-				route.should.have.length.above(1);
-				expect(route[0]).to.deep.equal({i:4,j:0});
-				expect(route[route.length-1]).to.deep.equal({i:0,j:4});
+				route.should.have.length.above(2);
+				expect(route[0]).to.deep.equal({i:2,j:0});
+				expect(route[route.length-1]).to.deep.equal({i:0,j:7});
 			})
 
 			it.skip('should find a path given a wall, no cost function', function(){
 				// Assign obstacles
-				var gz = Grid.duplicate(g);
+				var gz = Grid.duplicate(grid);
 				Grid.cell(2,1).set(gz)('WALL');
 				Grid.cell(0,3).set(gz)('WALL');
 				Grid.cell(2,2).set(gz)('WALL');
@@ -400,7 +399,7 @@ describe('Grid basic test', function(){
 			it.skip('should find route given a wall and cost function', function(){
 
 				// Assign obstacles
-				var gz = Grid.duplicate(g);
+				var gz = Grid.duplicate(grid);
 				Grid.cell(2,1).set(gz)('WALL');
 				Grid.cell(0,3).set(gz)('WALL');
 				Grid.cell(2,2).set(gz)('WALL');
