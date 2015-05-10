@@ -553,11 +553,12 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 					gScore.push({cost: g, coord:{i:coord.i, j:coord.j}});
 				}
 				function getCameFrom(dest){
-					var coords = _.filter(cameFrom, function(c){ return c.to.i==dest.i && c.to.j==dest.j });
-					if (coords.length==0)
-						return null
-					else
-						return coords[0].from;
+					for (var c in cameFrom){
+						if (cameFrom[c].to.i==dest.i && cameFrom[c].to.j==dest.j){
+							return cameFrom[c].from
+						}
+					}
+					throw 'Route breaks at' + JSON.stringify(dest);
 				}
 				function setCameFrom(src,dest){
 					for (var c in cameFrom){
@@ -577,8 +578,11 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 				while (openSet.length>0){
 					// Take an element from {openset} which has the smallest cost
 					var current = openSet.pop().coord;
-					if (current.i==endAt[0] && current.j==endAt[1])
+					if (current.i==endAt[0] && current.j==endAt[1]){
+						if (verbose==true)
+							console.log('Path fully reconstructed'.green);
 						break;
+					}
 
 					// Add {current} to {closedset}
 					closedSet.push({cost:0, coord:{i:current.i, j:current.j}});
@@ -605,22 +609,28 @@ Grid.routeOf = Grid.route = Grid.routing = function(grid){
 					})
 				}
 
-				// Reconstruct the path
+				// Reconstruct the route
 				var pos = {i: endAt[0], j: endAt[1]};
 				var route = [];
 				if (verbose==true) 
 					console.log('constructing route ...'.green);
 
-				while (pos.i!=startAt[0] && pos.j!=startAt[1]){
+				do {
 					route.push({i:pos.i, j:pos.j});
+					if (pos.i==startAt[0] && pos.j==startAt[1]){
+						// Complete route reconstructed
+						break;
+					}
+					
 					var from = getCameFrom(pos);
 					if (from==null){
-						console.error('Route breaks at '.red + JSON.stringify(from));
+						console.log('Route breaks at '.red + JSON.stringify(from));
 						console.log(route);
 						break;
 					}
 					pos = from;
 				}
+				while (pos != null);
 
 				route.reverse();
 				return route;

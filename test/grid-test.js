@@ -360,7 +360,7 @@ describe('Grid basic test', function(){
 			var grid = Grid.create(8,8,1);
 
 			it('should find a simple path without cost function', function(){
-				var verbose = true;
+				var verbose = false;
 				var cost = function(){return 1}
 				var route = Grid.routeOf(grid).from(2,0).to(0,7).astar(cost,verbose);
 
