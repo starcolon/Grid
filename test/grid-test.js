@@ -338,9 +338,25 @@ describe('Grid basic test', function(){
 
 			})
 
+			it('should find a simple path in a very big grid',function(){
+				var bigGrid = Grid.create(100,100);
+				// Generate route now
+				var isNotWall = function(value,coord){
+					return coord.j!=50 || Math.abs(coord.i-50)>8
+				}
+				var verbose = true;
+				route = Grid.routeOf(bigGrid).from(25,0).to(60,40).where(isNotWall).lee(verbose);
+
+				route.should.have.length.above(10);
+				
+				// Route should start at the right spot, end at the right spot
+				expect(route[0]).to.deep.equal({i:25,j:0});
+				expect(route[route.length-1]).to.deep.equal({i:60,j:40});				
+			})
+
 		})
 
-		describe('A* search tests', function(){
+		describe.skip('A* search tests', function(){
 			var g = Grid.create(5,5,1);
 
 			var simpleRouting = Grid.routeOf(g).from(4,0).to(0,4);
@@ -380,7 +396,7 @@ describe('Grid basic test', function(){
 				expect(route[route.length-1]).to.deep.equal({i:0,j:4});
 			})
 
-			it('should find given a wall and cost function', function(){
+			it('should find route given a wall and cost function', function(){
 
 				// Assign obstacles
 				var gz = Grid.duplicate(g);
