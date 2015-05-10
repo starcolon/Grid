@@ -371,7 +371,7 @@ describe('Grid basic test', function(){
 				expect(route[route.length-1]).to.deep.equal({i:0,j:7});
 			})
 
-			it.skip('should find a path given a wall, no cost function', function(){
+			it('should find a path given a wall, no cost function', function(){
 				// Assign obstacles
 				var gz = Grid.duplicate(grid);
 				Grid.cell(2,1).set(gz)('WALL');
@@ -382,7 +382,7 @@ describe('Grid basic test', function(){
 				var isNotWall = function(value,coord){
 					return (value!=='WALL')
 				}
-				route = Grid.routeOf(gz).from(4,0).to(0,4).where(isNotWall).astar();
+				route = Grid.routeOf(gz).from(4,0).to(0,7).where(isNotWall).astar();
 
 				// Route should not cross the wall
 				route.should.not.contain.an.item.that.deep.equal({i:2,j:1});
@@ -393,10 +393,10 @@ describe('Grid basic test', function(){
 
 				// Route should start at the right spot, end at the right spot
 				expect(route[0]).to.deep.equal({i:4,j:0});
-				expect(route[route.length-1]).to.deep.equal({i:0,j:4});
+				expect(route[route.length-1]).to.deep.equal({i:0,j:7});
 			})
 
-			it.skip('should find route given a wall and cost function', function(){
+			it('should find route given a wall and cost function', function(){
 
 				// Assign obstacles
 				var gz = Grid.duplicate(grid);
@@ -412,7 +412,7 @@ describe('Grid basic test', function(){
 					// Rightmost columns cost less
 					return 10/(coord.i+1)
 				}
-				route = Grid.routeOf(gz).from(4,0).to(0,4).where(isNotWall).astar(cost);
+				route = Grid.routeOf(gz).from(1,0).to(6,7).where(isNotWall).astar(cost);
 
 				// Route should not cross the wall
 				route.should.not.contain.an.item.that.deep.equal({i:2,j:1});
@@ -422,8 +422,8 @@ describe('Grid basic test', function(){
 				console.log(route);
 
 				// Route should start at the right spot, end at the right spot
-				expect(route[0]).to.deep.equal({i:4,j:0});
-				expect(route[route.length-1]).to.deep.equal({i:0,j:4});
+				expect(route[0]).to.deep.equal({i:1,j:0});
+				expect(route[route.length-1]).to.deep.equal({i:6,j:7});
 			})
 		})
 	})
