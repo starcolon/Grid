@@ -7,6 +7,9 @@ Grid module for virtualization projects
 
 The library is more designed in functional programming sense than an object-oriented discipline. Grid is actually a set of pure functions that manipulate generic two-dimensional arrays. The module itself does not and will not define its own data type. It just basically comprises a purely functional sets of operations.
 
+## Prerequisite
+Grid is designed specifically for some ECMAScript 6 features on {iojs}. Thus, basically, it won't run on the old (0.X.X `node.js`). You'll need an `iojs` on your machine.
+
 ## Include the library to the project
 Grid can simply be included to a node project by `require`:
 
