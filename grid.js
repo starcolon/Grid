@@ -35,7 +35,7 @@
 
 "use strict";
 
-var _ = require('underscore');
+if (typeof(_)=='undefined') var _ = require('underscore');
 var colors = require('colors');
 
 /**
