@@ -36,7 +36,13 @@
 "use strict";
 
 if (typeof(_)=='undefined') var _ = require('underscore');
-if (typeof(colors)=='undefined') var colors = require('colors'); 
+try{
+	var colors = require('colors'); 	
+}
+catch(e){
+	// Fall back
+}
+
 
 /**
  * Grid namespace, not to be used as a class
