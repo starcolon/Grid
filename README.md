@@ -1,5 +1,6 @@
 # Grid
 [![Build Status](https://travis-ci.org/starcolon/Grid.svg?branch=master)](https://travis-ci.org/starcolon/Grid)
+[![Coverage Status](https://coveralls.io/repos/github/starcolon/Grid/badge.svg?branch=master)](https://coveralls.io/github/starcolon/Grid?branch=master)
 
 Grid module for virtualization projects
 
